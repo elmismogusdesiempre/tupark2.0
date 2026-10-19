@@ -191,6 +191,53 @@
         .plate-info-row .lbl { color: var(--text-muted); font-weight: 600; }
         .plate-info-row .val { font-weight: 700; }
 
+        /* ================= ABOUT / ACCESS CORE LOGO ================= */
+        .ac-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .ac-logo-svg {
+            width: 70px;
+            height: 80px;
+            color: #FF5500;
+        }
+        .ac-text-container {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.95;
+        }
+        .ac-text-access {
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+        .ac-text-core {
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #FF5500;
+            letter-spacing: -1px;
+        }
+        .about-feature-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+        .about-feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+        .about-feature-list li:last-child { border-bottom: none; }
+
         /* ================= LOGIN SCREEN ================= */
         #login-screen {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -247,7 +294,7 @@
             background: var(--bg-card); border-top: 1px solid var(--border);
             padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
         }
-        .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.55rem 0.2rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.68rem; font-weight: 600; gap: 0.15rem; transition: color 0.2s; user-select: none; -webkit-user-select: none; min-height: 3.5rem; }
+        .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.55rem 0.2rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; gap: 0.15rem; transition: color 0.2s; user-select: none; -webkit-user-select: none; min-height: 3.5rem; }
         .mobile-nav-item .nav-icon { font-size: 1.35rem; line-height: 1; }
         .mobile-nav-item.active { color: var(--primary); }
         html.mobile-first .container {
@@ -367,6 +414,7 @@
         <button class="mobile-nav-item" data-section="caja"><span class="nav-icon">💰</span><span>Caja</span></button>
         <button class="mobile-nav-item" data-section="ajustes"><span class="nav-icon">⚙️</span><span>Ajustes</span></button>
         <button class="mobile-nav-item" data-section="tema"><span class="nav-icon">🎨</span><span>Tema</span></button>
+        <button class="mobile-nav-item" data-section="about"><span class="nav-icon">ℹ️</span><span>About</span></button>
     </nav>
 
     <div class="container">
@@ -438,6 +486,7 @@
                     <button class="tab-btn active" id="tab-settings-btn" onclick="cambiarTab('config')">⚙️ Configuración</button>
                     <button class="tab-btn" id="tab-reports-btn" onclick="cambiarTab('reports')">💰 Reportes</button>
                     <button class="tab-btn" id="tab-appearance-btn" onclick="cambiarTab('appearance')">🎨 Apariencia</button>
+                    <button class="tab-btn" id="tab-about-btn" onclick="cambiarTab('about')">ℹ️ About</button>
                 </div>
                 <div class="tabs-actions">
                     <button class="btn btn-success" id="btn-save-settings-top">💾 Guardar</button>
@@ -478,7 +527,6 @@
                         <div class="form-group" style="flex: 1;"><label>Puestos/Piso</label><input type="number" id="set-puestos" min="1"></div>
                     </div>
 
-                    <!-- NUEVO: CONTACTO DE LA EMPRESA -->
                     <h4 style="margin-top: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">📞 Contacto de la Empresa</h4>
                     <div class="form-group" style="margin-top: 0.6rem;">
                         <label>Número de Teléfono</label>
@@ -523,7 +571,6 @@
                     </div>
                     <div class="form-group" style="margin-top: 0.9rem;"><label>Hora inicio Nocturna</label><input type="time" id="set-hora-noche"></div>
 
-                    <!-- NUEVO: REDONDEO DE TIEMPO -->
                     <h4 style="margin-top: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">⏱️ Redondeo de Tiempo</h4>
                     <div class="checkbox-group" style="margin-top: 0.6rem;">
                         <input type="checkbox" id="set-redondear-tiempo">
@@ -686,6 +733,59 @@
                 </div>
                 <button class="btn btn-secondary btn-block" style="margin-top: 1.5rem;" onclick="cambiarTab('config')">Volver</button>
             </div>
+
+            <!-- CONTENIDO: ABOUT -->
+            <div id="content-about" class="hidden">
+                <div style="display: flex; justify-content: center; padding: 1.5rem 0;">
+                    <div class="ac-logo-container">
+                        <!-- Logo ACCESS CORE recreado con SVG y CSS -->
+                        <svg class="ac-logo-svg" viewBox="0 0 100 100">
+                            <!-- Hexágono exterior -->
+                            <polygon points="50,5 90,25 90,65 50,85 10,65 10,25" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
+                            <!-- Líneas internas superiores -->
+                            <path d="M50 5 L50 45 M10 25 L50 45 M90 25 L50 45" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
+                            <!-- Líneas internas inferiores -->
+                            <path d="M10 65 L50 45 L90 65" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
+                            <!-- Línea del nodo -->
+                            <path d="M50 25 L82 38" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" />
+                            <!-- Círculo del nodo -->
+                            <circle cx="85" cy="40" r="7" fill="currentColor" />
+                        </svg>
+                        <div class="ac-text-container">
+                            <span class="ac-text-access">ACCESS</span>
+                            <span class="ac-text-core">CORE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 0.3rem;">Gestión de Parqueadero</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Versión 1.0.0</p>
+                </div>
+
+                <div style="background: var(--bg-body); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 0.6rem; color: var(--primary);">Sobre la aplicación</h4>
+                    <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main);">
+                        Sistema integral de gestión de parqueaderos diseñado para optimizar la operación diaria. Permite el control de entradas y salidas, facturación con impresión térmica, gestión de clientes mensuales, convenios con comercios y un módulo completo de cierre de caja con exportación de reportes en CSV.
+                    </p>
+                </div>
+
+                <h4 style="margin-bottom: 0.6rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">Características Principales</h4>
+                <ul class="about-feature-list">
+                    <li>📄 <strong>Impresión Térmica:</strong> Compatible con rollos de 58mm y 80mm.</li>
+                    <li>📱 <strong>Mobile First:</strong> Experiencia de app nativa en dispositivos móviles.</li>
+                    <li>💰 <strong>Cierre de Caja:</strong> Control de efectivo, transferencias y gastos con exportación automática a CSV.</li>
+                    <li>🤝 <strong>Convenios:</strong> Descuentos automáticos por horas para centros comerciales y aliados.</li>
+                    <li>⏱️ <strong>Tarifas Flexibles:</strong> Tarifas diurnas/nocturnas, redondeo de tiempo y cobro por recarga eléctrica.</li>
+                    <li>🎨 <strong>Personalización:</strong> Modo oscuro, múltiples paletas de colores y ajuste de tamaño de fuente.</li>
+                </ul>
+
+                <div style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6;">
+                    <p>Desarrollado por <strong>ACCESS CORE</strong></p>
+                    <p>© 2024 ACCESS CORE. Todos los derechos reservados.</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -836,7 +936,6 @@
                 qrBase64: null, qrDireccion: '', mostrarQrDireccion: false,
                 printerWidth: '58', habilitarConvenios: false, convenios: [],
                 mobileFirst: false,
-                // NUEVOS CAMPOS
                 telefono: '', direccion: '', mostrarTelefono: false, mostrarDireccion: false,
                 redondearTiempo: false
             },
@@ -1070,6 +1169,7 @@
                 if (seccion === 'caja') cambiarTab('reports');
                 else if (seccion === 'ajustes') cambiarTab('config');
                 else if (seccion === 'tema') cambiarTab('appearance');
+                else if (seccion === 'about') cambiarTab('about');
             }
             document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.toggle('active', el.dataset.section === seccion));
             const saveBtn = document.getElementById('mobile-save-btn');
@@ -1079,11 +1179,15 @@
         }
 
         function cambiarTab(tab) {
-            ['tab-settings-btn', 'tab-reports-btn', 'tab-appearance-btn'].forEach(id => document.getElementById(id).classList.remove('active'));
-            ['content-config', 'content-reports', 'content-appearance'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            const tabs = ['tab-settings-btn', 'tab-reports-btn', 'tab-appearance-btn', 'tab-about-btn'];
+            const contents = ['content-config', 'content-reports', 'content-appearance', 'content-about'];
+            tabs.forEach(id => document.getElementById(id).classList.remove('active'));
+            contents.forEach(id => document.getElementById(id).classList.add('hidden'));
+            
             if (tab === 'config') { document.getElementById('tab-settings-btn').classList.add('active'); document.getElementById('content-config').classList.remove('hidden'); }
             else if (tab === 'reports') { document.getElementById('tab-reports-btn').classList.add('active'); document.getElementById('content-reports').classList.remove('hidden'); renderizarHistorial(); renderizarMovimientos(); actualizarUICaja(); }
             else if (tab === 'appearance') { document.getElementById('tab-appearance-btn').classList.add('active'); document.getElementById('content-appearance').classList.remove('hidden'); }
+            else if (tab === 'about') { document.getElementById('tab-about-btn').classList.add('active'); document.getElementById('content-about').classList.remove('hidden'); }
         }
 
         function configurarSubTabs() {
