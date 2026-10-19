@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-font-size="normal" data-color-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#007bff" id="meta-theme-color">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Parqueadero">
+    <title>Gestión de Parqueadero</title>
+    <style>
+        :root {
+            --bg-body: #f4f7f6; --bg-card: #ffffff; --text-main: #333333; --text-muted: #666666;
+            --primary: #007bff; --primary-hover: #0056b3; --danger: #dc3545; --danger-hover: #bd2130;
+            --success: #28a745; --success-hover: #218838; --warning: #ffc107; --border: #dddddd;
+            --ticket-bg: #ffffff; --ticket-text: #000000; --f-base: 16px;
+        }
+        html[data-font-size="large"] { --f-base: 18px; }
+        html[data-font-size="xlarge"] { --f-base: 21px; }
+        [data-theme="dark"] {
+            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #f4f7f6; --text-muted: #aaaaaa;
+            --primary: #3b82f6; --primary-hover: #2563eb; --danger: #ef4444; --danger-hover: #dc2626;
+            --success: #22c55e; --success-hover: #16a34a; --warning: #fbbf24; --border: #333333;
+            --ticket-bg: #2d2d2d; --ticket-text: #f4f7f6;
+        }
+        html[data-color-theme="sport"] { --primary: #e11d48; --primary-hover: #be123c; }
+        html[data-color-theme="sport"][data-theme="light"] { --bg-body: #fef2f2; --border: #fecaca; }
+        html[data-color-theme="sport"][data-theme="dark"] { --bg-body: #1a0000; --bg-card: #2d0a0a; --primary: #f43f5e; --border: #4a1515; }
+        html[data-color-theme="eco"] { --primary: #059669; --primary-hover: #047857; }
+        html[data-color-theme="eco"][data-theme="light"] { --bg-body: #f0fdf4; --border: #bbf7d0; }
+        html[data-color-theme="eco"][data-theme="dark"] { --bg-body: #022c22; --bg-card: #064e3b; --primary: #10b981; --border: #065f46; }
+        html[data-color-theme="cute"] { --primary: #ec4899; --primary-hover: #db2777; }
+        html[data-color-theme="cute"][data-theme="light"] { --bg-body: #fdf2f8; --border: #fbcfe8; }
+        html[data-color-theme="cute"][data-theme="dark"] { --bg-body: #2d0a1f; --bg-card: #3d1030; --primary: #f472b6; --border: #5c1f45; }
+        html[data-color-theme="elegant"] { --primary: #b8860b; --primary-hover: #996f09; }
+        html[data-color-theme="elegant"][data-theme="light"] { --bg-body: #f5f1e8; --border: #e0d5b7; }
+        html[data-color-theme="elegant"][data-theme="dark"] { --bg-body: #0f172a; --bg-card: #1e293b; --primary: #fbbf24; --primary-hover: #f59e0b; --border: #334155; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Tahoma, Geneva, Verdana, sans-serif; }
+        html { font-size: var(--f-base); }
+        body { background-color: var(--bg-body); color: var(--text-main); transition: background 0.3s, color 0.3s; padding: 1.25rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.9rem; border-bottom: 2px solid var(--border); }
+        .brand { display: flex; align-items: center; gap: 0.6rem; }
+        .brand img { max-height: 3.5rem; border-radius: 5px; object-fit: contain; }
+        .brand-emojis { display: flex; gap: 0.15rem; align-items: center; }
+        h1 { font-size: 1.5rem; }
+        .header-buttons button { background: none; border: 1px solid var(--border); color: var(--text-main); padding: 0.5rem 0.8rem; border-radius: 5px; cursor: pointer; margin-left: 0.6rem; font-weight: bold; font-size: 0.9rem; }
+        .card { background: var(--bg-card); border-radius: 8px; padding: 1.25rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.25rem; border: 1px solid var(--border); }
+        .form-group { margin-bottom: 0.9rem; }
+        label { display: block; margin-bottom: 0.3rem; font-weight: bold; font-size: 0.9rem; }
+        input[type="text"], input[type="number"], input[type="time"], input[type="file"], select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 5px; background: var(--bg-body); color: var(--text-main); font-size: 1rem; font-family: inherit; }
+        textarea { resize: vertical; min-height: 4rem; }
+        .input-group { display: flex; gap: 0.6rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; padding: 0.6rem; background: var(--bg-body); border-radius: 5px; border: 1px dashed var(--primary); }
+        .checkbox-group input { width: 1.2rem; height: 1.2rem; cursor: pointer; }
+        .btn { padding: 0.6rem 1.25rem; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1rem; color: white; text-align: center; }
+        .btn-primary { background-color: var(--primary); } .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); } .btn-danger:hover { background-color: var(--danger-hover); }
+        .btn-success { background-color: var(--success); } .btn-success:hover { background-color: var(--success-hover); }
+        .btn-secondary { background-color: var(--text-muted); }
+        .btn-warning { background-color: var(--warning); color: #000; }
+        .btn-block { width: 100%; margin-top: 0.6rem; }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.85rem; }
+        .badge { padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: white; display: inline-block; text-align: center; min-width: 5rem; }
+        .bg-success { background-color: var(--success); } .bg-danger { background-color: var(--danger); } .bg-warning { background-color: var(--warning); color: #000; }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+        .tag { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 0.3rem 0.6rem; border-radius: 15px; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tag span { cursor: pointer; font-weight: bold; color: var(--danger); }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.6rem; }
+        .search-box { padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-body); color: var(--text-main); width: 15rem; font-size: 0.95rem;}
+        table { width: 100%; border-collapse: collapse; margin-top: 0.9rem; font-size: 0.95rem; }
+        th, td { padding: 0.6rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;}
+        .tabs-container { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 1rem; flex-wrap: wrap; gap: 0.6rem; }
+        .tabs { display: flex; gap: 0.6rem; padding-bottom: 0.6rem; flex-wrap: wrap;}
+        .tab-btn { background: var(--bg-body); border: 1px solid var(--border); padding: 0.5rem 0.9rem; border-radius: 5px; cursor: pointer; font-weight: bold; color: var(--text-main); font-size: 0.95rem;}
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .tabs-actions { display: flex; gap: 0.6rem; padding-bottom: 0.6rem; }
+        .subtabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; flex-wrap: wrap; padding-bottom: 0.5rem; border-bottom: 1px dashed var(--border); }
+        .subtab-btn { background: transparent; border: none; padding: 0.5rem 0.9rem; border-radius: 5px; cursor: pointer; font-weight: bold; color: var(--text-muted); font-size: 0.9rem; }
+        .subtab-btn:hover { background: var(--bg-body); color: var(--text-main); }
+        .subtab-btn.active { background: var(--primary); color: white; }
+        .emoji-picker { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .emoji-option { font-size: 1.8rem; padding: 0.3rem; border-radius: 8px; cursor: pointer; border: 2px solid transparent; line-height: 1; display: inline-block; }
+        .emoji-option:hover { background: var(--bg-body); }
+        .emoji-option.selected { border-color: var(--primary); background: var(--bg-body); transform: scale(1.05); }
+        .emoji-option.flip { transform: scaleX(-1); }
+        .emoji-option.flip.selected { transform: scaleX(-1) scale(1.05); }
+        .color-picker { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .color-option { width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; border: 3px solid transparent; display: flex; justify-content: center; align-items: center; color: white; font-size: 1.5rem; position: relative; }
+        .color-option.selected { border-color: var(--text-main); transform: scale(1.1); box-shadow: 0 0 15px rgba(0,0,0,0.3); }
+        .color-option small { position: absolute; bottom: -1.4rem; left: 50%; transform: translateX(-50%); font-size: 0.7rem; color: var(--text-main); white-space: nowrap; font-weight: bold; }
+        .payment-methods { display: flex; gap: 0.5rem; }
+        .payment-btn { flex: 1; padding: 0.7rem; border: 2px solid var(--border); background: var(--bg-body); color: var(--text-main); border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.95rem; }
+        .payment-btn.active { border-color: var(--success); background: var(--success); color: white; }
+        .hidden { display: none !important; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; padding: 1rem; }
+        .modal-content { background: var(--bg-card); padding: 1.25rem; border-radius: 8px; width: 90%; max-width: 28rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); max-height: 95vh; overflow-y: auto;}
+        .ticket-wrapper { display: flex; justify-content: center; background: #e0e0e0; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        .ticket { background: #ffffff; color: #000000; width: 280px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 12px; line-height: 1.3; border: 1px dashed #999; }
+        [data-theme="dark"] .ticket-wrapper { background: #111; }
+        .ticket-header { text-align: center; margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; }
+        .ticket-header img { max-height: 40px; margin-bottom: 5px; }
+        .ticket-emojis { display: flex; gap: 0.15rem; margin-bottom: 5px; }
+        .ticket-emojis span { font-size: 22px; display: inline-block; }
+        .ticket-emojis span.flip { transform: scaleX(-1); }
+        .ticket-header h2 { font-size: 14px; margin-bottom: 2px; text-transform: uppercase; }
+        .ticket-type { font-size: 13px; font-weight: bold; background: #000; color: #fff; padding: 3px; margin: 5px 0; text-align: center; }
+        .ticket-divider { border-top: 1px dashed #000; margin: 8px 0; }
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .ticket-total { font-size: 16px; font-weight: bold; text-align: center; margin-top: 10px; }
+        .ticket-footer { text-align: center; margin-top: 15px; font-size: 10px; white-space: pre-line; }
+        .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 10px 0; }
+        .qr-container img { width: 90px; height: 90px; object-fit: contain; display: block; }
+        .qr-container .qr-direccion { font-size: 9px; text-align: center; margin-top: 3px; color: #000; word-break: break-all; max-width: 90%; }
+        .qr-container .qr-placeholder { width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; border: 1px dashed #999; font-size: 9px; color: #666; text-align: center; padding: 0.3rem; }
+        .modal-actions { display: flex; gap: 0.6rem; margin-top: 0.9rem; flex-wrap: wrap; }
+        .modal-actions .btn { flex: 1; padding: 0.6rem 0.3rem; font-size: 0.9rem; }
+        #custom-alert { z-index: 2000; }
+        #custom-alert .modal-content { text-align: center; max-width: 18rem; }
+        #alert-icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
+        #alert-message { font-size: 1.1rem; margin-bottom: 0.9rem; white-space: pre-line; }
+        .qr-preview { margin-top: 0.6rem; padding: 0.6rem; background: var(--bg-body); border: 1px dashed var(--border); border-radius: 5px; text-align: center; }
+        .qr-preview img { max-width: 120px; max-height: 120px; display: inline-block; }
+        .convenio-item { background: var(--bg-body); padding: 0.9rem; border-radius: 5px; border: 1px solid var(--border); margin-bottom: 0.6rem; }
+
+        /* ================= MOBILE BAR (HIDDEN BY DEFAULT) ================= */
+        .mobile-app-bar { display: none; }
+        .mobile-bottom-nav { display: none; }
+        .mobile-first-toggle-card { background: var(--bg-body); padding: 1rem; border-radius: 8px; border: 2px solid var(--primary); margin-top: 1rem; }
+
+        /* ================= MOBILE FIRST MODE ================= */
+        html.mobile-first {
+            overscroll-behavior: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        html.mobile-first body {
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+        }
+        html.mobile-first header {
+            display: none !important;
+        }
+        html.mobile-first .mobile-app-bar {
+            display: flex;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: var(--bg-card);
+            padding: 0.7rem 1rem;
+            padding-top: calc(0.7rem + env(safe-area-inset-top));
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .mobile-app-bar .mobile-emojis { display: flex; gap: 0.1rem; font-size: 1.3rem; }
+        .mobile-app-bar .mobile-emojis span.flip { transform: scaleX(-1); }
+        .mobile-app-bar #mobile-app-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .mobile-app-bar .mobile-bar-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            padding: 0.4rem;
+            cursor: pointer;
+            border-radius: 8px;
+            line-height: 1;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile-app-bar .mobile-bar-btn:active { background: var(--bg-body); }
+
+        html.mobile-first .mobile-bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 100;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+        }
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.55rem 0.2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 600;
+            gap: 0.15rem;
+            transition: color 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            min-height: 3.5rem;
+        }
+        .mobile-nav-item .nav-icon { font-size: 1.35rem; line-height: 1; }
+        .mobile-nav-item.active { color: var(--primary); }
+        .mobile-nav-item:active { background: var(--bg-body); }
+
+        html.mobile-first .container {
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            padding-top: calc(3.5rem + env(safe-area-inset-top)) !important;
+            padding-bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
+            height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        html.mobile-first .card {
+            border-radius: 0 !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+            padding: 1rem !important;
+        }
+        html.mobile-first #view-settings {
+            background: var(--bg-body) !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+        }
+        html.mobile-first .tabs-container {
+            display: none !important;
+        }
+        html.mobile-first #btn-close-settings,
+        html.mobile-first #btn-close-reports {
+            display: none !important;
+        }
+        html.mobile-first .subtabs {
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 50;
+            margin: 0 !important;
+            padding: 0.5rem !important;
+            border-bottom: 1px solid var(--border) !important;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        html.mobile-first .subtabs::-webkit-scrollbar { display: none; }
+        html.mobile-first .subtab-btn {
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        html.mobile-first .subtab-content {
+            padding: 1rem;
+        }
+        html.mobile-first .modal-overlay {
+            align-items: flex-end !important;
+            padding: 0 !important;
+        }
+        html.mobile-first .modal-content {
+            border-radius: 20px 20px 0 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            max-height: 92vh !important;
+            padding: 1rem !important;
+            padding-top: 0.5rem !important;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        html.mobile-first .modal-content::before {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            margin: 0.3rem auto 0.8rem;
+        }
+        html.mobile-first input,
+        html.mobile-first select,
+        html.mobile-first textarea {
+            font-size: 16px !important;
+            padding: 0.75rem !important;
+        }
+        html.mobile-first .btn {
+            padding: 0.75rem 1rem !important;
+            border-radius: 10px !important;
+            font-size: 1rem !important;
+        }
+        html.mobile-first .btn-sm {
+            padding: 0.4rem 0.7rem !important;
+            font-size: 0.85rem !important;
+        }
+        html.mobile-first table { font-size: 0.85rem; }
+        html.mobile-first th, html.mobile-first td { padding: 0.5rem 0.4rem; }
+        html.mobile-first .ticket-wrapper {
+            padding: 10px;
+            background: #e0e0e0;
+            border-radius: 8px;
+        }
+        html.mobile-first .ticket { width: 100%; max-width: 100%; }
+        html.mobile-first .search-box { width: 100%; margin-top: 0.3rem; }
+        html.mobile-first .form-group { margin-bottom: 1rem; }
+        html.mobile-first h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+        html.mobile-first h4 { font-size: 1rem; }
+        html.mobile-first .subtab-content > h3:first-child {
+            padding-top: 0.5rem;
+        }
+        html.mobile-first .mobile-hide-desktop { display: block !important; }
+
+        @media (display-mode: standalone) {
+            html.mobile-first .container {
+                padding-top: calc(3.5rem + env(safe-area-inset-top)) !important;
+            }
+        }
+
+        /* ================= IMPRESIÓN TÉRMICA ================= */
+        @media print {
+            @page { margin: 0; }
+            html, body { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; min-height: 0 !important; }
+            .container, #modal-apertura, #modal-cierre, #custom-alert,
+            #modal-ticket .modal-actions, #modal-ticket #exit-extras, #modal-ticket #tk-botones-accion,
+            #modal-ticket .no-print, .mobile-app-bar, .mobile-bottom-nav {
+                display: none !important;
+            }
+            #modal-ticket {
+                position: static !important; background: white !important; padding: 0 !important;
+                margin: 0 !important; height: auto !important; width: 100% !important;
+                overflow: visible !important; display: block !important; z-index: auto !important;
+                top: auto !important; left: auto !important; max-height: none !important;
+                align-items: flex-start !important;
+            }
+            #modal-ticket .modal-content {
+                position: static !important; background: white !important; box-shadow: none !important;
+                padding: 0 !important; margin: 0 auto !important; max-height: none !important;
+                max-width: none !important; width: 100% !important; overflow: visible !important;
+                display: block !important; border-radius: 0 !important;
+                animation: none !important;
+                padding-bottom: 0 !important;
+                padding-top: 0 !important;
+            }
+            #modal-ticket .modal-content::before { display: none !important; }
+            #modal-ticket .ticket-wrapper {
+                position: static !important; background: white !important; padding: 0 !important;
+                margin: 0 auto !important; display: block !important; width: auto !important;
+            }
+            #modal-ticket .ticket {
+                margin: 0 auto !important; box-shadow: none !important; border: none !important;
+                background: white !important; color: black !important;
+                page-break-inside: avoid !important;
+            }
+            body.printer-58mm #modal-ticket .ticket { width: 54mm; max-width: 54mm; font-size: 9px; line-height: 1.2; padding: 1mm; }
+            body.printer-80mm #modal-ticket .ticket { width: 76mm; max-width: 76mm; font-size: 11px; line-height: 1.3; padding: 2mm; }
+            body.printer-58mm #modal-ticket .ticket-header h2 { font-size: 11px; }
+            body.printer-80mm #modal-ticket .ticket-header h2 { font-size: 14px; }
+            body.printer-58mm #modal-ticket .ticket-type { font-size: 10px; padding: 2px; }
+            body.printer-80mm #modal-ticket .ticket-type { font-size: 12px; padding: 3px; }
+            body.printer-58mm #modal-ticket .ticket-total { font-size: 12px; }
+            body.printer-80mm #modal-ticket .ticket-total { font-size: 16px; }
+            body.printer-58mm #modal-ticket #tk-total { font-size: 15px !important; }
+            body.printer-80mm #modal-ticket #tk-total { font-size: 19px !important; }
+            body.printer-58mm #modal-ticket .ticket-footer { font-size: 8px; }
+            body.printer-80mm #modal-ticket .ticket-footer { font-size: 9px; }
+            body.printer-58mm #modal-ticket .qr-container img { width: 16mm !important; height: 16mm !important; }
+            body.printer-80mm #modal-ticket .qr-container img { width: 22mm !important; height: 22mm !important; }
+            body.printer-58mm #modal-ticket .qr-container .qr-placeholder { width: 16mm; height: 16mm; font-size: 7px; }
+            body.printer-80mm #modal-ticket .qr-container .qr-placeholder { width: 22mm; height: 22mm; font-size: 8px; }
+            body.printer-58mm #modal-ticket .qr-container .qr-direccion { font-size: 7px; }
+            body.printer-80mm #modal-ticket .qr-container .qr-direccion { font-size: 8px; }
+            #modal-ticket .ticket-emojis span { font-size: 14px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE APP BAR -->
+    <div class="mobile-app-bar">
+        <div id="mobile-app-emojis" class="mobile-emojis"></div>
+        <h2 id="mobile-app-name">Mi Parqueadero</h2>
+        <button class="mobile-bar-btn hidden" id="mobile-save-btn">💾</button>
+        <button class="mobile-bar-btn" id="mobile-theme-btn">🌙</button>
+    </div>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="mobile-bottom-nav">
+        <button class="mobile-nav-item active" data-section="inicio">
+            <span class="nav-icon">🏠</span>
+            <span>Inicio</span>
+        </button>
+        <button class="mobile-nav-item" data-section="caja">
+            <span class="nav-icon">💰</span>
+            <span>Caja</span>
+        </button>
+        <button class="mobile-nav-item" data-section="ajustes">
+            <span class="nav-icon">⚙️</span>
+            <span>Ajustes</span>
+        </button>
+        <button class="mobile-nav-item" data-section="tema">
+            <span class="nav-icon">🎨</span>
+            <span>Tema</span>
+        </button>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="brand">
+                <img id="header-logo" src="" alt="Logo" class="hidden">
+                <div id="header-emojis" class="brand-emojis"></div>
+                <h1 id="app-title">Mi Parqueadero</h1>
+            </div>
+            <div class="header-buttons">
+                <button id="theme-toggle">🌙 Oscuro</button>
+                <button id="btn-settings">⚙️ Ajustes y Reportes</button>
+            </div>
+        </header>
+
+        <div id="view-dashboard">
+            <div class="card">
+                <h3>Registrar Entrada / Salida</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.9rem;">Escriba la placa y seleccione el tipo de vehículo.</p>
+                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 1; min-width: 12rem;">
+                        <label>Placa</label>
+                        <input type="text" id="input-placa" placeholder="Ej: ABC123" style="text-transform: uppercase; font-size: 1.5rem; text-align: center;">
+                    </div>
+                    <div style="flex: 1; min-width: 9rem;">
+                        <label>Tipo</label>
+                        <select id="select-tipo-vehiculo" style="font-size: 1.1rem; padding: 0.7rem;">
+                            <option value="carro">🚗 Carro</option>
+                            <option value="moto">🏍️ Moto</option>
+                            <option value="bicicleta">🚲 Bicicleta</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="btn-procesar-placa" style="padding: 0.7rem 1.8rem; font-size: 1.1rem;">🔍 Procesar</button>
+                </div>
+                <div class="checkbox-group hidden" id="grupo-recarga">
+                    <input type="checkbox" id="chk-electrico">
+                    <label for="chk-electrico" style="margin: 0; cursor: pointer;">⚡ Vehículo Eléctrico (Requiere Recarga)</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-header">
+                    <h3>Vehículos (<span id="count-vehiculos">0</span>)</h3>
+                    <input type="text" id="input-buscar-tabla" class="search-box" placeholder="Buscar placa...">
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>Placa</th><th>Tipo</th><th>Box</th><th>Entrada</th><th>Acción</th></tr></thead>
+                        <tbody id="tabla-vehiculos"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card" style="border: 1px solid var(--primary);">
+                <h3>Clientes Mensuales</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>Placa</th><th>Estado</th><th>Corte</th><th>Acción</th></tr></thead>
+                        <tbody id="tabla-mensuales"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-settings" class="card hidden">
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" id="tab-settings-btn" onclick="cambiarTab('config')">⚙️ Configuración</button>
+                    <button class="tab-btn" id="tab-reports-btn" onclick="cambiarTab('reports')">💰 Reportes</button>
+                    <button class="tab-btn" id="tab-appearance-btn" onclick="cambiarTab('appearance')">🎨 Apariencia</button>
+                </div>
+                <div class="tabs-actions">
+                    <button class="btn btn-success" id="btn-save-settings-top">💾 Guardar</button>
+                    <button class="btn btn-secondary" id="btn-close-settings-top">↩️ Salir</button>
+                </div>
+            </div>
+
+            <div id="content-config">
+                <div class="subtabs">
+                    <button class="subtab-btn active" data-subtab="general">🏢 General</button>
+                    <button class="subtab-btn" data-subtab="tarifas">💵 Tarifas</button>
+                    <button class="subtab-btn" data-subtab="convenios">🤝 Convenios</button>
+                    <button class="subtab-btn" data-subtab="mensuales">👥 Mensuales</button>
+                    <button class="subtab-btn" data-subtab="ticket">🧾 Ticket</button>
+                </div>
+
+                <div id="subtab-general" class="subtab-content">
+                    <h3>Configuración General</h3>
+                    <div style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; margin-top: 0.9rem; border: 1px solid var(--border);">
+                        <h4 style="margin-bottom: 0.6rem;">♿ Accesibilidad</h4>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Tamaño de la Letra</label>
+                            <select id="set-font-size">
+                                <option value="normal">Normal</option>
+                                <option value="large">Grande</option>
+                                <option value="xlarge">Muy Grande</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1.25rem;">
+                        <label>Logo de la Empresa (Imagen - Opcional)</label>
+                        <input type="file" id="set-logo" accept="image/png, image/jpeg">
+                    </div>
+                    <div style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; border: 1px dashed var(--primary);">
+                        <label>O usa Emojis (máx. 6)</label>
+                        <div class="emoji-picker" id="emoji-picker"></div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1.25rem;">
+                        <label>Nombre de la Empresa</label>
+                        <input type="text" id="set-nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>NIT</label>
+                        <input type="text" id="set-nit">
+                    </div>
+                    <div style="display: flex; gap: 0.9rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Pisos</label>
+                            <input type="number" id="set-pisos" min="1">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Puestos/Piso</label>
+                            <input type="number" id="set-puestos" min="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="subtab-tarifas" class="subtab-content hidden">
+                    <h3>Tarifas y Horarios</h3>
+                    <div style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; margin-top: 0.9rem;">
+                        <h5 style="margin-bottom: 0.6rem;">🚗 Carros</h5>
+                        <div style="display: flex; gap: 0.9rem;">
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Día</label><input type="number" id="set-precio-carro-dia" min="1"></div>
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Noche</label><input type="number" id="set-precio-carro-noche" min="1"></div>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; margin-top: 0.6rem;">
+                        <h5 style="margin-bottom: 0.6rem;">🏍️ Motos</h5>
+                        <div style="display: flex; gap: 0.9rem;">
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Día</label><input type="number" id="set-precio-moto-dia" min="1"></div>
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Noche</label><input type="number" id="set-precio-moto-noche" min="1"></div>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; margin-top: 0.6rem;">
+                        <h5 style="margin-bottom: 0.6rem;">🚲 Bicicletas</h5>
+                        <div style="display: flex; gap: 0.9rem;">
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Día</label><input type="number" id="set-precio-bici-dia" min="1"></div>
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;"><label>Noche</label><input type="number" id="set-precio-bici-noche" min="1"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 0.9rem;"><label>Hora inicio Nocturna</label><input type="time" id="set-hora-noche"></div>
+                    <h4 style="margin-top: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">Recarga Eléctrica</h4>
+                    <div class="checkbox-group" style="margin-top: 0.9rem; border-color: var(--success);">
+                        <input type="checkbox" id="set-habilitar-recarga">
+                        <label for="set-habilitar-recarga" style="margin: 0; cursor: pointer;">Habilitar recarga eléctrica</label>
+                    </div>
+                    <div class="form-group hidden" id="grupo-precio-recarga" style="margin-top: 0.6rem;"><label>Precio Minuto Recarga</label><input type="number" id="set-precio-recarga" min="1"></div>
+                </div>
+
+                <div id="subtab-convenios" class="subtab-content hidden">
+                    <h3>Convenios con Comercios</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Registra convenios con centros comerciales, gimnasios o locales.</p>
+                    <div class="checkbox-group" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="set-habilitar-convenios">
+                        <label for="set-habilitar-convenios" style="margin: 0; cursor: pointer;">Habilitar convenios</label>
+                    </div>
+                    <div id="convenios-container"></div>
+                    <button class="btn btn-primary btn-block" id="btn-add-convenio" style="margin-top: 0.6rem;">+ Agregar Convenio</button>
+                </div>
+
+                <div id="subtab-mensuales" class="subtab-content hidden">
+                    <h3>Clientes Mensuales</h3>
+                    <div class="form-group" style="margin-top: 0.9rem;"><label>Valor Mensualidad</label><input type="number" id="set-precio-mensual" min="1"></div>
+                    <div class="form-group" style="background: var(--bg-body); padding: 0.9rem; border-radius: 5px; border: 1px dashed var(--border);">
+                        <label>Agregar Cliente</label>
+                        <div class="input-group" style="margin-bottom: 0.6rem;">
+                            <input type="text" id="input-add-mensual" placeholder="Placa" style="text-transform: uppercase;">
+                            <input type="number" id="input-dia-corte" placeholder="Día corte" min="1" max="31" style="max-width: 9rem;">
+                        </div>
+                        <button class="btn btn-primary btn-block" id="btn-add-mensual">Agregar</button>
+                    </div>
+                    <div class="tags-container" id="lista-mensuales"></div>
+                </div>
+
+                <div id="subtab-ticket" class="subtab-content hidden">
+                    <h3>Configuración del Ticket</h3>
+                    <h4 style="margin-top: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">🖨️ Impresora Térmica</h4>
+                    <div class="form-group" style="margin-top: 0.6rem;">
+                        <label>Ancho del rollo</label>
+                        <select id="set-printer-width">
+                            <option value="58">58 mm (5.8 cm - Estándar)</option>
+                            <option value="80">80 mm (8 cm - Ancho)</option>
+                        </select>
+                    </div>
+                    <h4 style="margin-top: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">Texto del Disclaimer</h4>
+                    <div class="checkbox-group" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="set-mostrar-disclaimer">
+                        <label for="set-mostrar-disclaimer" style="margin: 0; cursor: pointer;">Imprimir el texto del disclaimer</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Texto del Disclaimer</label>
+                        <textarea id="set-ticket-disclaimer" rows="5"></textarea>
+                    </div>
+                    <h4 style="margin-top: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem;">Código QR del Ticket</h4>
+                    <div class="form-group">
+                        <label>Imagen del QR</label>
+                        <input type="file" id="set-qr-imagen" accept="image/png, image/jpeg">
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección / URL del QR</label>
+                        <input type="text" id="set-qr-direccion" placeholder="Ej: https://wa.me/3001234567">
+                    </div>
+                    <div class="checkbox-group" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="set-mostrar-qr-direccion">
+                        <label for="set-mostrar-qr-direccion" style="margin: 0; cursor: pointer;">Mostrar dirección bajo el QR</label>
+                    </div>
+                    <div class="qr-preview" id="qr-preview-box">
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem;">Vista previa:</p>
+                        <img id="qr-preview-img" src="" alt="QR" class="hidden" style="max-width: 100px; max-height: 100px;">
+                        <p id="qr-preview-text" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all; margin-top: 0.3rem;"></p>
+                    </div>
+                    <button class="btn btn-danger btn-block" id="btn-eliminar-qr" style="margin-top: 0.6rem;">🗑️ Eliminar QR</button>
+                </div>
+            </div>
+
+            <div id="content-reports" class="hidden">
+                <div class="subtabs">
+                    <button class="subtab-btn active" data-subtab="vehiculos">🚗 Vehículos</button>
+                    <button class="subtab-btn" data-subtab="movimientos">💸 Movimientos</button>
+                    <button class="subtab-btn" data-subtab="cierre">🔐 Caja</button>
+                </div>
+
+                <div id="subtab-vehiculos" class="subtab-content">
+                    <div class="tabs" style="border-bottom: none; margin-bottom: 0.6rem;">
+                        <button class="tab-btn report-filter active" onclick="filtrarReporte('day')">Hoy</button>
+                        <button class="tab-btn report-filter" onclick="filtrarReporte('month')">Mes</button>
+                        <button class="tab-btn report-filter" onclick="filtrarReporte('semester')">Semestre</button>
+                        <button class="tab-btn report-filter" onclick="filtrarReporte('year')">Año</button>
+                    </div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <div style="background: var(--primary); color: white; padding: 1rem; border-radius: 8px; flex: 1; min-width: 200px; display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0;">Total:</h4><h2 id="total-recaudado" style="margin: 0;">$ 0</h2>
+                        </div>
+                        <div style="background: var(--success); color: white; padding: 1rem; border-radius: 8px; flex: 1; min-width: 200px; display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0;">Recarga ⚡:</h4><h2 id="total-recaudado-recarga" style="margin: 0;">$ 0</h2>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning" id="btn-exportar-csv">📥 Exportar CSV</button>
+                    <div style="overflow-x: auto; max-height: 400px;">
+                        <table>
+                            <thead><tr><th>Fecha/Hora</th><th>Placa</th><th>Tipo</th><th>Pago</th><th>Desglose</th><th>Total</th></tr></thead>
+                            <tbody id="tabla-historial"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="subtab-movimientos" class="subtab-content hidden">
+                    <h3>Movimientos de Caja</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Registra los gastos que salen de la caja.</p>
+                    <div style="background: var(--bg-body); padding: 1rem; border-radius: 8px; border: 1px dashed var(--border); margin-bottom: 1rem;">
+                        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
+                            <div style="flex: 1; min-width: 8rem;"><label>Monto</label><input type="number" id="mov-monto" placeholder="15000" min="1"></div>
+                            <div style="flex: 2; min-width: 12rem;"><label>Descripción</label><input type="text" id="mov-descripcion" placeholder="Ej: Almuerzo"></div>
+                        </div>
+                        <button class="btn btn-danger btn-block" id="btn-add-movimiento">💸 Registrar Salida</button>
+                    </div>
+                    <h4 style="margin-bottom: 0.6rem;">Movimientos de Hoy</h4>
+                    <table><thead><tr><th>Hora</th><th>Descripción</th><th>Monto</th><th>Acción</th></tr></thead><tbody id="tabla-movimientos"></tbody></table>
+                </div>
+
+                <div id="subtab-cierre" class="subtab-content hidden">
+                    <h3>Cierre de Caja</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Apertura al inicio del día y cierre al finalizar.</p>
+                    <button id="btn-action-caja" class="btn btn-success btn-block" style="font-size: 1.2rem; padding: 1rem; margin-bottom: 1rem;">🔓 Apertura de Caja</button>
+                    <div id="cierre-cerrada-info" style="text-align:center; padding: 2rem; background: var(--bg-body); border-radius: 8px; border: 1px dashed var(--border);">
+                        <h2 style="color: var(--primary); margin-bottom: 0.5rem;">🔒 Caja Cerrada</h2>
+                        <p style="color: var(--text-muted);">Presiona "Apertura de Caja" para indicar el efectivo inicial.</p>
+                    </div>
+                    <div id="cierre-abierta-info" class="hidden">
+                        <div style="background: var(--bg-body); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border);"><span>💼 Fondo Inicial:</span><strong id="cierre-apertura">$ 0</strong></div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border);"><span>💵 Efectivo Cobrado:</span><strong id="cierre-efectivo">$ 0</strong></div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border);"><span>💳 Transferencia:</span><strong id="cierre-transferencia">$ 0</strong></div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); color: var(--danger);"><span>📤 Gastos/Retiros:</span><strong id="cierre-gastos">$ 0</strong></div>
+                            <div style="display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 2px solid var(--border);"><span>⚡ Recaudo Eléctrico:</span><strong id="cierre-recarga">$ 0</strong></div>
+                            <div style="display: flex; justify-content: space-between; padding: 1rem; font-size: 1.3rem; background: var(--primary); color: white; border-radius: 8px; margin-top: 0.6rem;"><span>💰 Efectivo Esperado:</span><strong id="cierre-efectivo-esperado">$ 0</strong></div>
+                        </div>
+                        <small style="color: var(--text-muted); display: block; margin-top: 0.6rem;">Efectivo Esperado = Fondo + Efectivo - Gastos</small>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger btn-block" style="margin-top: 1.25rem;" id="btn-close-reports">Volver al Inicio</button>
+            </div>
+
+            <div id="content-appearance" class="hidden">
+                <h3>Apariencia de la Interfaz</h3>
+
+                <div class="mobile-first-toggle-card">
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem;">
+                        <span style="font-size: 2rem;">📱</span>
+                        <div>
+                            <h4 style="margin: 0;">Mobile First</h4>
+                            <small style="color: var(--text-muted);">Experiencia tipo app nativa para celular</small>
+                        </div>
+                    </div>
+                    <div class="checkbox-group" style="margin-top: 0.6rem;">
+                        <input type="checkbox" id="set-mobile-first">
+                        <label for="set-mobile-first" style="margin: 0; cursor: pointer;">Activar modo Mobile First</label>
+                    </div>
+                    <small style="color: var(--text-muted); display: block; margin-top: 0.6rem; line-height: 1.4;">Activa barras de navegación inferiores, modales tipo "sheet" y diseño optimizado para pantallas táctiles. Para ocultar la barra del navegador, añade la app a tu pantalla de inicio.</small>
+                </div>
+
+                <div style="background: var(--bg-body); padding: 1.25rem; border-radius: 5px; border: 1px solid var(--border); margin-top: 1rem;">
+                    <h4 style="margin-bottom: 1.5rem;">Paleta de Colores</h4>
+                    <div class="color-picker" id="color-picker">
+                        <div class="color-option" data-color="default" style="background-color: #007bff;">🔵<small>Clásico</small></div>
+                        <div class="color-option" data-color="sport" style="background-color: #e11d48;">🔴<small>Deportivo</small></div>
+                        <div class="color-option" data-color="eco" style="background-color: #10b981;">🟢<small>Ecológico</small></div>
+                        <div class="color-option" data-color="cute" style="background-color: #ec4899;">🩷<small>Tierno</small></div>
+                        <div class="color-option" data-color="elegant" style="background-color: #b8860b;">🟡<small>Elegante</small></div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-block" style="margin-top: 1.5rem;" onclick="cambiarTab('config')">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-ticket" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="ticket-wrapper">
+                <div class="ticket" id="ticket-print">
+                    <div class="ticket-header">
+                        <img id="tk-logo" src="" alt="Logo" class="hidden" style="max-height: 50px;">
+                        <div id="tk-emojis" class="ticket-emojis"></div>
+                        <h2 id="tk-nombre">EMPRESA</h2>
+                        <div id="tk-nit">NIT: 0000</div>
+                    </div>
+                    <div class="ticket-type" id="tk-tipo">TICKET DE ENTRADA</div>
+                    <div class="ticket-divider"></div>
+                    <div class="ticket-row"><span>Placa:</span> <span id="tk-placa">--</span></div>
+                    <div class="ticket-row"><span>Tipo:</span> <span id="tk-tipo-vehiculo">--</span></div>
+                    <div class="ticket-row"><span>Box:</span> <span id="tk-box">--</span></div>
+                    <div class="ticket-divider"></div>
+                    <div class="ticket-row"><span>Fecha Entrada:</span> <span id="tk-fecha-in">--</span></div>
+                    <div class="ticket-row"><span>Hora Entrada:</span> <span id="tk-hora-in">--</span></div>
+                    <div id="tk-datos-salida" class="hidden">
+                        <div class="ticket-row"><span>Fecha Salida:</span> <span id="tk-fecha-out">--</span></div>
+                        <div class="ticket-row"><span>Hora Salida:</span> <span id="tk-hora-out">--</span></div>
+                        <div class="ticket-divider"></div>
+                        <div class="ticket-row"><span>Tarifa Parqueo:</span> <span id="tk-tarifa">--</span></div>
+                        <div class="ticket-row"><span>Tiempo Total:</span> <span id="tk-tiempo">--</span></div>
+                        <div id="tk-bloque-convenio" class="hidden">
+                            <div class="ticket-row"><span>Convenio:</span> <span id="tk-convenio-nombre">--</span></div>
+                            <div class="ticket-row"><span>Tiempo Cobrado:</span> <span id="tk-tiempo-cobrado">--</span></div>
+                            <div class="ticket-row"><span>Descuento:</span> <span id="tk-convenio-descuento">--</span></div>
+                        </div>
+                        <div id="tk-bloque-recarga" class="hidden">
+                            <div class="ticket-row"><span>Tarifa Recarga:</span> <span id="tk-tarifa-recarga">--</span></div>
+                        </div>
+                        <div class="ticket-total">TOTAL A PAGAR<br><span id="tk-total" style="font-size: 20px;">$ 0</span></div>
+                    </div>
+                    <div class="ticket-divider"></div>
+                    <div class="qr-container" id="tk-qr-container">
+                        <img id="tk-qr-img" src="" alt="QR" class="hidden">
+                        <div id="tk-qr-placeholder" class="qr-placeholder">QR no configurado</div>
+                        <div id="tk-qr-direccion" class="qr-direccion hidden"></div>
+                    </div>
+                    <div class="ticket-footer" id="tk-footer-mensaje"></div>
+                </div>
+            </div>
+            <div class="no-print hidden" id="exit-extras">
+                <div class="form-group hidden" id="convenio-group">
+                    <label>🤝 Convenio Aplicable</label>
+                    <select id="select-convenio"><option value="">Sin convenio</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Método de Pago</label>
+                    <div class="payment-methods">
+                        <button type="button" class="payment-btn active" id="pay-cash" data-method="efectivo">💵 Efectivo</button>
+                        <button type="button" class="payment-btn" id="pay-transfer" data-method="transferencia">💳 Transferencia</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Observación (No se imprime)</label>
+                    <textarea id="exit-comment" rows="2" placeholder="Ej: Cliente rompió el tacho..."></textarea>
+                </div>
+            </div>
+            <div class="modal-actions no-print" id="tk-botones-accion">
+                <button class="btn btn-primary" style="flex: 100%;" onclick="window.print()">🖨️ Imprimir</button>
+                <button class="btn btn-secondary" style="flex: 1;" id="btn-cancelar-ticket">Cancelar</button>
+                <button class="btn btn-danger hidden" style="flex: 1;" id="btn-confirmar-salida">Cobrar y Liberar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-apertura" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 0.6rem;">🔓 Apertura de Caja</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">¿Cuánto efectivo hay físicamente en la caja?</p>
+            <div class="form-group">
+                <label>Monto inicial (COP)</label>
+                <input type="number" id="input-apertura-monto" placeholder="Ej: 50000" min="0" style="font-size: 1.5rem; text-align: center;">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" style="flex: 1;" id="btn-confirmar-apertura">✅ Abrir Caja</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="document.getElementById('modal-apertura').classList.add('hidden')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-cierre" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 32rem;">
+            <h3 style="margin-bottom: 0.6rem;">🔐 Cierre de Caja</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Cuenta el dinero físico y regístralo para hacer el cruce. Al cerrar, se limpiará la lista del día.</p>
+            <div style="background: var(--bg-body); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;"><span>Efectivo Esperado:</span><strong id="modal-cierre-esperado">$ 0</strong></div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Fondo + Efectivo - Gastos</div>
+            </div>
+            <div class="form-group">
+                <label>¿Cuánto dinero contó en caja?</label>
+                <input type="number" id="input-conteo-cierre" placeholder="Ej: 120000" min="0" style="font-size: 1.3rem; text-align: center;">
+            </div>
+            <div id="modal-diferencia-box" style="padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 1rem; display: none;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem;">DIFERENCIA</div>
+                <div id="modal-diferencia-valor" style="font-size: 1.5rem; font-weight: bold;">$ 0</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" style="flex: 100%;" id="btn-confirmar-cierre">🔐 Cerrar Caja y Descargar CSV</button>
+                <button class="btn btn-secondary" style="flex: 100%;" onclick="document.getElementById('modal-cierre').classList.add('hidden')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-alert" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div id="alert-icon">✅</div>
+            <div id="alert-message">Mensaje</div>
+            <button class="btn btn-primary btn-block" onclick="document.getElementById('custom-alert').classList.add('hidden')">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        let appState = {
+            settings: {
+                nombre: "Parqueadero Camacho S.A.S", nit: "1074682943",
+                pisos: 1, puestosPorPiso: 10, horaInicioNoche: "18:00", precioMensual: 150000,
+                logoBase64: null, logoEmojis: ['🅿️'], colorTheme: 'default', fontSize: 'normal',
+                mensuales: [],
+                tarifas: { carro: { dia: 50, noche: 80 }, moto: { dia: 30, noche: 50 }, bicicleta: { dia: 10, noche: 20 } },
+                habilitarRecarga: false, precioRecarga: 150,
+                ticketDisclaimer: "NO NOS HACEMOS RESPONSABLES POR DAÑOS O PÉRDIDAS DE OBJETOS DE VALOR DEJADOS EN EL VEHÍCULO.",
+                mostrarDisclaimer: true,
+                qrBase64: null,
+                qrDireccion: '',
+                mostrarQrDireccion: false,
+                printerWidth: '58',
+                habilitarConvenios: false,
+                convenios: [],
+                mobileFirst: false
+            },
+            vehiculos: [], historial: [], cashMovements: [],
+            cashState: { opened: false, openingTime: null, openingCash: 0, closed: false, closingTime: null, closingCounted: 0, closingDifference: 0 }
+        };
+
+        const emojisDisponibles = [
+            { char: '🅿️', flip: false }, { char: '🚗', flip: true }, { char: '🏍️', flip: false },
+            { char: '🚲', flip: true }, { char: '🚙', flip: true }, { char: '🛵', flip: true },
+            { char: '🏢', flip: false }, { char: '😊', flip: false }
+        ];
+
+        let filtroReporteActual = 'day';
+        let selectedPaymentMethod = 'efectivo';
+        let currentExitData = null;
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const viewDashboard = document.getElementById('view-dashboard');
+        const viewSettings = document.getElementById('view-settings');
+        const tablaVehiculos = document.getElementById('tabla-vehiculos');
+        const tablaMensuales = document.getElementById('tabla-mensuales');
+        const tablaHistorial = document.getElementById('tabla-historial');
+        const tablaMovimientos = document.getElementById('tabla-movimientos');
+        const countVehiculos = document.getElementById('count-vehiculos');
+        const modalTicket = document.getElementById('modal-ticket');
+        const inputPlaca = document.getElementById('input-placa');
+        const selectTipo = document.getElementById('select-tipo-vehiculo');
+        const chkElectrico = document.getElementById('chk-electrico');
+        const grupoRecarga = document.getElementById('grupo-recarga');
+        const inputBuscarTabla = document.getElementById('input-buscar-tabla');
+        const btnCancelarTicket = document.getElementById('btn-cancelar-ticket');
+        const btnConfirmarSalida = document.getElementById('btn-confirmar-salida');
+        const exitExtras = document.getElementById('exit-extras');
+        const exitComment = document.getElementById('exit-comment');
+
+        function init() {
+            cargarDatos();
+            verificarNuevoDiaCaja();
+            aplicarTema();
+            aplicarTamanoFuente();
+            aplicarColorTheme();
+            aplicarAnchoImpresora();
+            aplicarModoMobile();
+            renderizarEmojisSettings();
+            renderizarTabla();
+            renderizarTablaMensuales();
+            actualizarTextosSettings();
+            renderizarMensualesSettings();
+            renderizarHistorial();
+            renderizarMovimientos();
+            verificarRecargaEnDashboard();
+            configurarSubTabs();
+            configurarPaymentButtons();
+            actualizarUICaja();
+            actualizarPreviewQR();
+            renderizarConveniosSettings();
+            configurarMobileNav();
+        }
+
+        function cargarDatos() {
+            const s = localStorage.getItem('park_settings');
+            const v = localStorage.getItem('park_vehiculos');
+            const h = localStorage.getItem('park_historial');
+            const m = localStorage.getItem('park_movements');
+            const c = localStorage.getItem('park_cashstate');
+            if (s) {
+                let p = JSON.parse(s);
+                if (p.precioMinuto && !p.tarifas) {
+                    p.tarifas = { carro: { dia: p.precioMinuto, noche: p.precioMinutoNoche || p.precioMinuto }, moto: { dia: p.precioMinuto, noche: p.precioMinutoNoche || p.precioMinuto }, bicicleta: { dia: p.precioMinuto, noche: p.precioMinutoNoche || p.precioMinuto } };
+                }
+                if (p.mensuales && p.mensuales.length > 0 && typeof p.mensuales[0] === 'string') p.mensuales = p.mensuales.map(x => ({ placa: x, dentro: false, diaCorte: 1 }));
+                if (p.emojiLogo && !p.logoEmojis) p.logoEmojis = [p.emojiLogo];
+                appState.settings = { ...appState.settings, ...p };
+            }
+            if (v) { appState.vehiculos = JSON.parse(v); appState.vehiculos.forEach(x => { if (!x.tipo) x.tipo = 'carro'; if (x.esElectrico === undefined) x.esElectrico = false; }); }
+            if (h) { appState.historial = JSON.parse(h); appState.historial.forEach(x => { if (x.costoParqueo === undefined) x.costoParqueo = x.total; if (x.costoRecarga === undefined) x.costoRecarga = 0; if (x.paymentMethod === undefined) x.paymentMethod = 'efectivo'; if (x.comment === undefined) x.comment = ''; if (x.convenio === undefined) x.convenio = ''; if (x.descuento === undefined) x.descuento = 0; if (x.minutosCobrados === undefined) x.minutosCobrados = x.minutos; }); }
+            if (m) appState.cashMovements = JSON.parse(m);
+            if (c) appState.cashState = JSON.parse(c);
+        }
+
+        function guardarDatos() {
+            localStorage.setItem('park_settings', JSON.stringify(appState.settings));
+            localStorage.setItem('park_vehiculos', JSON.stringify(appState.vehiculos));
+            localStorage.setItem('park_historial', JSON.stringify(appState.historial));
+            localStorage.setItem('park_movements', JSON.stringify(appState.cashMovements));
+            localStorage.setItem('park_cashstate', JSON.stringify(appState.cashState));
+        }
+
+        function verificarNuevoDiaCaja() {
+            if (appState.cashState.openingTime) {
+                if (new Date(appState.cashState.openingTime).toDateString() !== new Date().toDateString() && appState.cashState.closed) {
+                    appState.cashState = { opened: false, openingTime: null, openingCash: 0, closed: false, closingTime: null, closingCounted: 0, closingDifference: 0 };
+                    guardarDatos();
+                }
+            }
+        }
+
+        function mostrarAlerta(msg, tipo = 'success') {
+            document.getElementById('alert-icon').innerText = tipo === 'success' ? '✅' : '❌';
+            document.getElementById('alert-message').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        // ================= TEMA =================
+        themeToggleBtn.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            const nw = cur === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', nw);
+            localStorage.setItem('park_theme', nw);
+            aplicarTema();
+        });
+        function aplicarTema() {
+            const t = localStorage.getItem('park_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+            themeToggleBtn.innerText = t === 'light' ? '🌙 Oscuro' : '☀️ Claro';
+            const meta = document.getElementById('meta-theme-color');
+            if (meta) meta.setAttribute('content', t === 'dark' ? '#121212' : '#007bff');
+            const mbtn = document.getElementById('mobile-theme-btn');
+            if (mbtn) mbtn.innerText = t === 'light' ? '🌙' : '☀️';
+        }
+        function aplicarTamanoFuente() { document.documentElement.setAttribute('data-font-size', appState.settings.fontSize); }
+        function aplicarColorTheme() {
+            document.documentElement.setAttribute('data-color-theme', appState.settings.colorTheme);
+            document.querySelectorAll('.color-option').forEach(el => el.classList.toggle('selected', el.getAttribute('data-color') === appState.settings.colorTheme));
+        }
+        function aplicarAnchoImpresora() {
+            document.body.classList.remove('printer-58mm', 'printer-80mm');
+            document.body.classList.add('printer-' + appState.settings.printerWidth + 'mm');
+        }
+
+        // ================= MOBILE FIRST =================
+        function aplicarModoMobile() {
+            if (appState.settings.mobileFirst) {
+                document.documentElement.classList.add('mobile-first');
+                syncMobileAppBar();
+                cambiarSeccionMobile('inicio');
+            } else {
+                document.documentElement.classList.remove('mobile-first');
+                viewDashboard.classList.remove('hidden');
+                viewSettings.classList.add('hidden');
+            }
+            const mf = document.getElementById('set-mobile-first');
+            if (mf) mf.checked = appState.settings.mobileFirst;
+        }
+
+        function syncMobileAppBar() {
+            const barName = document.getElementById('mobile-app-name');
+            const barEmojis = document.getElementById('mobile-app-emojis');
+            if (barName) barName.innerText = appState.settings.nombre;
+            if (barEmojis) barEmojis.innerHTML = renderEmojisHTML(appState.settings.logoEmojis, '1.3rem');
+            const mbtn = document.getElementById('mobile-theme-btn');
+            const t = document.documentElement.getAttribute('data-theme');
+            if (mbtn) mbtn.innerText = t === 'light' ? '🌙' : '☀️';
+        }
+
+        function configurarMobileNav() {
+            document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+                btn.addEventListener('click', () => cambiarSeccionMobile(btn.dataset.section));
+            });
+            document.getElementById('mobile-theme-btn').addEventListener('click', () => themeToggleBtn.click());
+            document.getElementById('mobile-save-btn').addEventListener('click', () => document.getElementById('btn-save-settings-top').click());
+        }
+
+        function cambiarSeccionMobile(seccion) {
+            viewDashboard.classList.add('hidden');
+            viewSettings.classList.add('hidden');
+
+            if (seccion === 'inicio') {
+                viewDashboard.classList.remove('hidden');
+            } else {
+                viewSettings.classList.remove('hidden');
+                if (seccion === 'caja') cambiarTab('reports');
+                else if (seccion === 'ajustes') cambiarTab('config');
+                else if (seccion === 'tema') cambiarTab('appearance');
+            }
+
+            document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.toggle('active', el.dataset.section === seccion));
+
+            const saveBtn = document.getElementById('mobile-save-btn');
+            if (seccion === 'ajustes' || seccion === 'tema') saveBtn.classList.remove('hidden');
+            else saveBtn.classList.add('hidden');
+
+            document.querySelector('.container').scrollTop = 0;
+        }
+
+        // ================= TABS =================
+        function cambiarTab(tab) {
+            ['tab-settings-btn', 'tab-reports-btn', 'tab-appearance-btn'].forEach(id => document.getElementById(id).classList.remove('active'));
+            ['content-config', 'content-reports', 'content-appearance'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            if (tab === 'config') { document.getElementById('tab-settings-btn').classList.add('active'); document.getElementById('content-config').classList.remove('hidden'); }
+            else if (tab === 'reports') { document.getElementById('tab-reports-btn').classList.add('active'); document.getElementById('content-reports').classList.remove('hidden'); renderizarHistorial(); renderizarMovimientos(); actualizarUICaja(); }
+            else if (tab === 'appearance') { document.getElementById('tab-appearance-btn').classList.add('active'); document.getElementById('content-appearance').classList.remove('hidden'); }
+        }
+
+        function configurarSubTabs() {
+            document.querySelectorAll('#content-config .subtab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#content-config .subtab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('#content-config .subtab-content').forEach(c => c.classList.add('hidden'));
+                    btn.classList.add('active');
+                    document.getElementById('subtab-' + btn.getAttribute('data-subtab')).classList.remove('hidden');
+                });
+            });
+            document.querySelectorAll('#content-reports .subtab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#content-reports .subtab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('#content-reports .subtab-content').forEach(c => c.classList.add('hidden'));
+                    btn.classList.add('active');
+                    const t = btn.getAttribute('data-subtab');
+                    document.getElementById('subtab-' + t).classList.remove('hidden');
+                    if (t === 'movimientos') renderizarMovimientos();
+                    if (t === 'cierre') actualizarUICaja();
+                });
+            });
+        }
+
+        function verificarRecargaEnDashboard() {
+            if (appState.settings.habilitarRecarga) grupoRecarga.classList.remove('hidden');
+            else { grupoRecarga.classList.add('hidden'); chkElectrico.checked = false; }
+        }
+
+        // ================= LOGICA PRINCIPAL =================
+        document.getElementById('btn-procesar-placa').addEventListener('click', procesarPlaca);
+        inputPlaca.addEventListener('keypress', e => { if (e.key === 'Enter') procesarPlaca(); });
+
+        function procesarPlaca() {
+            const placa = inputPlaca.value.trim().toUpperCase();
+            if (!placa) return mostrarAlerta("Ingrese una placa.", "error");
+            const idxM = appState.settings.mensuales.findIndex(m => m.placa === placa);
+            if (idxM !== -1) {
+                const m = appState.settings.mensuales[idxM];
+                m.dentro = !m.dentro;
+                guardarDatos(); renderizarTablaMensuales(); renderizarMensualesSettings();
+                mostrarAlerta(m.dentro ? `¡Bienvenido!\nMensual ${placa} INGRESÓ.` : `Mensual ${placa} SALIÓ.`, "success");
+                inputPlaca.value = '';
+                return;
+            }
+            const existing = appState.vehiculos.find(v => v.placa === placa);
+            if (existing) { generarTicketSalida(placa); inputPlaca.value = ''; }
+            else { registrarEntrada(placa); }
+        }
+
+        function registrarEntrada(placa) {
+            const cap = appState.settings.pisos * appState.settings.puestosPorPiso;
+            if (appState.vehiculos.length >= cap) return mostrarAlerta("Parqueadero LLENO.", "error");
+            let box = 1;
+            while (appState.vehiculos.some(v => v.box === box)) box++;
+            let piso = Math.ceil(box / appState.settings.puestosPorPiso);
+            const nuevo = { placa, box, piso, horaEntrada: Date.now(), tipo: selectTipo.value, esElectrico: chkElectrico.checked && appState.settings.habilitarRecarga };
+            appState.vehiculos.push(nuevo);
+            inputBuscarTabla.value = '';
+            renderizarTabla(); guardarDatos();
+            inputPlaca.value = ''; chkElectrico.checked = false;
+            mostrarModalTicket(nuevo, 'entrada');
+        }
+
+        function generarTicketSalida(placa) {
+            const v = appState.vehiculos.find(x => x.placa === placa);
+            if (v) mostrarModalTicket(v, 'salida');
+        }
+        window.prepararSalidaTabla = p => generarTicketSalida(p);
+
+        function calcularCosto(v, horaSalidaMs) {
+            const mins = Math.ceil((horaSalidaMs - v.horaEntrada) / 60000);
+            const horaSalida = new Date(horaSalidaMs);
+            const horaCorte = parseInt(appState.settings.horaInicioNoche.split(':')[0]);
+            const esNocturna = horaSalida.getHours() >= horaCorte;
+            const tipo = v.tipo || 'carro';
+            const tarifa = esNocturna ? appState.settings.tarifas[tipo].noche : appState.settings.tarifas[tipo].dia;
+            const costoParqueo = mins * tarifa;
+            const costoRecarga = v.esElectrico ? mins * appState.settings.precioRecarga : 0;
+            return { minutos: mins, tarifaParqueo: tarifa, costoParqueo, costoRecarga, total: costoParqueo + costoRecarga, esNocturna };
+        }
+
+        function renderEmojisHTML(emojis, fs = '22px') {
+            if (!emojis || emojis.length === 0) return '';
+            return emojis.map(e => {
+                const obj = emojisDisponibles.find(x => x.char === e);
+                return `<span class="${obj && obj.flip ? 'flip' : ''}" style="font-size:${fs}; display:inline-block;">${e}</span>`;
+            }).join('');
+        }
+
+        function actualizarQRenTicket() {
+            const img = document.getElementById('tk-qr-img');
+            const placeholder = document.getElementById('tk-qr-placeholder');
+            const direccion = document.getElementById('tk-qr-direccion');
+            if (appState.settings.qrBase64) {
+                img.src = appState.settings.qrBase64;
+                img.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            } else {
+                img.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+            if (appState.settings.mostrarQrDireccion && appState.settings.qrDireccion) {
+                direccion.innerText = appState.settings.qrDireccion;
+                direccion.classList.remove('hidden');
+            } else {
+                direccion.classList.add('hidden');
+            }
+        }
+
+        function actualizarTicketConvenio() {
+            if (!currentExitData) return;
+            const calc = currentExitData.calcFinal;
+            const conv = currentExitData.convenioAplicado;
+            document.getElementById('tk-tiempo').innerText = `${calc.minutos} Minutos`;
+            document.getElementById('tk-total').innerText = `$ ${calc.total.toLocaleString('es-CO')}`;
+            const bloque = document.getElementById('tk-bloque-convenio');
+            if (conv) {
+                bloque.classList.remove('hidden');
+                document.getElementById('tk-convenio-nombre').innerText = conv.nombre;
+                document.getElementById('tk-tiempo-cobrado').innerText = `${calc.minutosCobrados} Min`;
+                document.getElementById('tk-convenio-descuento').innerText = `-$${calc.descuento.toLocaleString('es-CO')}`;
+            } else {
+                bloque.classList.add('hidden');
+            }
+        }
+
+        function mostrarModalTicket(v, tipo) {
+            const fIn = new Date(v.horaEntrada);
+            const opF = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const opH = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            document.getElementById('tk-nombre').innerText = appState.settings.nombre;
+            document.getElementById('tk-nit').innerText = "NIT: " + appState.settings.nit;
+            document.getElementById('tk-placa').innerText = v.placa;
+            const tv = v.tipo || 'carro';
+            document.getElementById('tk-tipo-vehiculo').innerText = tv.toUpperCase() + (v.esElectrico ? " (ELÉCTRICO)" : "");
+            document.getElementById('tk-box').innerText = `${v.box} (Piso ${v.piso})`;
+            document.getElementById('tk-fecha-in').innerText = fIn.toLocaleDateString('es-CO', opF);
+            document.getElementById('tk-hora-in').innerText = fIn.toLocaleTimeString('es-CO', opH);
+
+            const tkLogo = document.getElementById('tk-logo');
+            const tkEmojis = document.getElementById('tk-emojis');
+            if (appState.settings.logoBase64) {
+                tkLogo.src = appState.settings.logoBase64;
+                tkLogo.classList.remove('hidden');
+                tkEmojis.innerHTML = '';
+            } else {
+                tkLogo.classList.add('hidden');
+                tkEmojis.innerHTML = renderEmojisHTML(appState.settings.logoEmojis, '26px');
+            }
+
+            actualizarQRenTicket();
+
+            if (tipo === 'entrada') {
+                document.getElementById('tk-tipo').innerText = "COMPROBANTE DE INGRESO";
+                document.getElementById('tk-datos-salida').classList.add('hidden');
+                let footer = "<strong>CONSERVE ESTE TICKET</strong><br>";
+                if (appState.settings.mostrarDisclaimer && appState.settings.ticketDisclaimer) footer += "\n" + appState.settings.ticketDisclaimer;
+                document.getElementById('tk-footer-mensaje').innerHTML = footer;
+                btnConfirmarSalida.classList.add('hidden');
+                exitExtras.classList.add('hidden');
+                btnCancelarTicket.innerText = "Cerrar";
+                btnCancelarTicket.onclick = () => modalTicket.classList.add('hidden');
+                currentExitData = null;
+            } else {
+                const horaSalida = Date.now();
+                const fOut = new Date(horaSalida);
+                const calc = calcularCosto(v, horaSalida);
+                document.getElementById('tk-tipo').innerText = "COMPROBANTE DE SALIDA";
+                document.getElementById('tk-datos-salida').classList.remove('hidden');
+                document.getElementById('tk-fecha-out').innerText = fOut.toLocaleDateString('es-CO', opF);
+                document.getElementById('tk-hora-out').innerText = fOut.toLocaleTimeString('es-CO', opH);
+                document.getElementById('tk-tarifa').innerText = `$${calc.tarifaParqueo} / min (${calc.esNocturna ? 'NOCTURNA' : 'DIURNA'})`;
+                if (v.esElectrico) {
+                    document.getElementById('tk-bloque-recarga').classList.remove('hidden');
+                    document.getElementById('tk-tarifa-recarga').innerText = `$${appState.settings.precioRecarga} / min`;
+                } else {
+                    document.getElementById('tk-bloque-recarga').classList.add('hidden');
+                }
+                let footer = "¡GRACIAS POR SU VISITA!";
+                if (appState.settings.mostrarDisclaimer && appState.settings.ticketDisclaimer) footer += "\n\n" + appState.settings.ticketDisclaimer;
+                document.getElementById('tk-footer-mensaje').innerHTML = footer;
+
+                const convenioGroup = document.getElementById('convenio-group');
+                const selectConv = document.getElementById('select-convenio');
+                selectConv.innerHTML = '<option value="">Sin convenio</option>';
+                currentExitData = {
+                    vehiculo: v, horaSalida, calcOriginal: calc,
+                    calcFinal: { ...calc, minutosCobrados: calc.minutos, descuento: 0 },
+                    convenioAplicado: null
+                };
+                if (appState.settings.habilitarConvenios && appState.settings.convenios.length > 0) {
+                    const validos = appState.settings.convenios.filter(c => c.nombre && c.nombre.trim() && c.horas > 0);
+                    if (validos.length > 0) {
+                        validos.forEach(c => {
+                            const opt = document.createElement('option');
+                            opt.value = c.id;
+                            opt.textContent = `${c.nombre} (${c.horas}h gratis)`;
+                            selectConv.appendChild(opt);
+                        });
+                        convenioGroup.classList.remove('hidden');
+                    } else convenioGroup.classList.add('hidden');
+                } else convenioGroup.classList.add('hidden');
+
+                selectConv.value = '';
+                selectConv.onchange = (e) => {
+                    const id = e.target.value;
+                    if (!id) {
+                        currentExitData.convenioAplicado = null;
+                        currentExitData.calcFinal = { ...currentExitData.calcOriginal, minutosCobrados: currentExitData.calcOriginal.minutos, descuento: 0 };
+                    } else {
+                        const conv = appState.settings.convenios.find(c => c.id == id);
+                        currentExitData.convenioAplicado = conv;
+                        const convMin = conv.horas * 60;
+                        const orig = currentExitData.calcOriginal;
+                        const minCobrados = Math.max(0, orig.minutos - convMin);
+                        const costoParqueo = minCobrados * orig.tarifaParqueo;
+                        const descuento = (orig.minutos - minCobrados) * orig.tarifaParqueo;
+                        currentExitData.calcFinal = { ...orig, minutosCobrados: minCobrados, costoParqueo, descuento, total: costoParqueo + orig.costoRecarga };
+                    }
+                    actualizarTicketConvenio();
+                };
+                actualizarTicketConvenio();
+
+                exitExtras.classList.remove('hidden');
+                exitComment.value = '';
+                selectedPaymentMethod = 'efectivo';
+                document.querySelectorAll('.payment-btn').forEach(b => b.classList.toggle('active', b.dataset.method === 'efectivo'));
+
+                btnConfirmarSalida.classList.remove('hidden');
+                btnCancelarTicket.innerText = "Cancelar Salida";
+                btnCancelarTicket.onclick = () => {
+                    modalTicket.classList.add('hidden');
+                    currentExitData = null;
+                    mostrarAlerta("Salida cancelada. El vehículo sigue adentro.", "error");
+                };
+                btnConfirmarSalida.onclick = () => {
+                    const calcFinal = currentExitData.calcFinal;
+                    const conv = currentExitData.convenioAplicado;
+                    const reg = {
+                        placa: v.placa, tipo: v.tipo || 'carro',
+                        horaEntrada: v.horaEntrada, horaSalida: currentExitData.horaSalida,
+                        minutos: calcFinal.minutos, minutosCobrados: calcFinal.minutosCobrados || calcFinal.minutos,
+                        costoParqueo: calcFinal.costoParqueo, costoRecarga: calcFinal.costoRecarga,
+                        descuento: calcFinal.descuento || 0,
+                        convenio: conv ? conv.nombre : '', convenioHoras: conv ? conv.horas : 0,
+                        total: calcFinal.total, esElectrico: v.esElectrico,
+                        paymentMethod: selectedPaymentMethod, comment: exitComment.value.trim()
+                    };
+                    appState.historial.push(reg);
+                    const idx = appState.vehiculos.findIndex(x => x.placa === v.placa);
+                    if (idx !== -1) appState.vehiculos.splice(idx, 1);
+                    guardarDatos();
+                    renderizarTabla(inputBuscarTabla.value.toUpperCase());
+                    modalTicket.classList.add('hidden');
+                    currentExitData = null;
+                    mostrarAlerta(`Vehículo ${v.placa} retirado.\nTotal: $${calcFinal.total.toLocaleString('es-CO')}\nPago: ${selectedPaymentMethod}${conv ? '\nConvenio: ' + conv.nombre : ''}`, "success");
+                };
+            }
+            modalTicket.classList.remove('hidden');
+        }
+
+        function configurarPaymentButtons() {
+            document.querySelectorAll('.payment-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedPaymentMethod = btn.dataset.method;
+                    document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        }
+
+        // ================= RENDERIZADO =================
+        inputBuscarTabla.addEventListener('input', e => renderizarTabla(e.target.value.toUpperCase()));
+
+        function renderizarTabla(filtro = '') {
+            tablaVehiculos.innerHTML = '';
+            countVehiculos.innerText = appState.vehiculos.length;
+            appState.vehiculos.filter(v => v.placa.includes(filtro)).sort((a, b) => a.horaEntrada - b.horaEntrada).forEach(v => {
+                const tr = document.createElement('tr');
+                const horaStr = new Date(v.horaEntrada).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+                const tv = v.tipo || 'carro';
+                let ico = tv === 'moto' ? '🏍️' : (tv === 'bicicleta' ? '🚲' : '🚗');
+                if (v.esElectrico) ico += '⚡';
+                tr.innerHTML = `<td style="font-weight:bold;">${v.placa}</td><td>${ico}</td><td>${v.box}</td><td>${horaStr}</td><td><button class="btn btn-danger btn-sm" onclick="prepararSalidaTabla('${v.placa}')">Cobrar</button></td>`;
+                tablaVehiculos.appendChild(tr);
+            });
+        }
+
+        function renderizarTablaMensuales() {
+            tablaMensuales.innerHTML = '';
+            if (appState.settings.mensuales.length === 0) { tablaMensuales.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Sin clientes mensuales.</td></tr>'; return; }
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            appState.settings.mensuales.forEach(m => {
+                const tr = document.createElement('tr');
+                const badge = m.dentro ? '<span class="badge bg-success">DENTRO</span>' : '<span class="badge bg-danger">FUERA</span>';
+                let pago = new Date(hoy.getFullYear(), hoy.getMonth(), m.diaCorte);
+                if (pago < hoy) pago.setMonth(pago.getMonth() + 1);
+                const dias = Math.ceil(Math.abs(pago - hoy) / 86400000);
+                let alerta = `<span style="color:var(--success); font-weight:bold; font-size:0.85rem;">Faltan ${dias}d</span>`;
+                if (dias <= 3) alerta = `<span class="badge bg-warning">${dias}d</span>`;
+                else if (dias === 0) alerta = `<span class="badge bg-danger">HOY</span>`;
+                tr.innerHTML = `<td style="font-weight:bold;">${m.placa}</td><td>${badge}</td><td>${alerta}</td><td><button class="btn btn-secondary btn-sm" onclick="toggleMensualRapido('${m.placa}')">Cambiar</button></td>`;
+                tablaMensuales.appendChild(tr);
+            });
+        }
+
+        window.toggleMensualRapido = p => {
+            const i = appState.settings.mensuales.findIndex(m => m.placa === p);
+            if (i !== -1) { appState.settings.mensuales[i].dentro = !appState.settings.mensuales[i].dentro; guardarDatos(); renderizarTablaMensuales(); renderizarMensualesSettings(); }
+        };
+
+        function filtrarPorRango(hist, rango) {
+            const hoy = new Date(); const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()).getTime();
+            return hist.filter(r => {
+                const f = new Date(r.horaSalida);
+                if (rango === 'day') return r.horaSalida >= inicioHoy;
+                if (rango === 'month') return f.getMonth() === hoy.getMonth() && f.getFullYear() === hoy.getFullYear();
+                if (rango === 'semester') return f.getFullYear() === hoy.getFullYear() && Math.floor(f.getMonth()/6) === Math.floor(hoy.getMonth()/6);
+                if (rango === 'year') return f.getFullYear() === hoy.getFullYear();
+                return true;
+            });
+        }
+
+        function renderizarHistorial() {
+            tablaHistorial.innerHTML = '';
+            let total = 0, totalR = 0;
+            const filtro = filtrarPorRango(appState.historial, filtroReporteActual).sort((a,b) => b.horaSalida - a.horaSalida);
+            filtro.forEach(r => {
+                total += r.total; totalR += (r.costoRecarga || 0);
+                const f = new Date(r.horaSalida);
+                const fechaStr = f.toLocaleDateString('es-CO') + ' ' + f.toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'});
+                const tv = r.tipo || 'carro';
+                const ico = tv === 'moto' ? '🏍️' : (tv === 'bicicleta' ? '🚲' : '🚗');
+                const cP = r.costoParqueo || 0, cR = r.costoRecarga || 0;
+                let desg = `P: $${cP.toLocaleString('es-CO')}`;
+                if (cR > 0) desg += `<br><span style="color:var(--success); font-size:0.8rem;">⚡ $${cR.toLocaleString('es-CO')}</span>`;
+                if (r.convenio) desg += `<br><span style="color:var(--warning); font-size:0.8rem;">🤝 -$${(r.descuento || 0).toLocaleString('es-CO')}</span>`;
+                const payIco = r.paymentMethod === 'transferencia' ? '💳' : '💵';
+                const cIco = r.comment ? ' 📝' : '';
+                const convIco = r.convenio ? ' 🤝' : '';
+                const tooltip = [r.comment, r.convenio ? `Convenio: ${r.convenio} (${r.convenioHoras}h) - Descuento: $${(r.descuento || 0).toLocaleString('es-CO')}` : ''].filter(Boolean).join(' | ');
+                const tr = document.createElement('tr');
+                tr.setAttribute('title', tooltip);
+                tr.innerHTML = `<td style="font-size:0.85rem;">${fechaStr}</td><td style="font-weight:bold;">${r.placa}${cIco}${convIco}</td><td>${ico}</td><td>${payIco}</td><td style="font-size:0.85rem;">${desg}</td><td style="font-weight:bold; color:var(--success);">$${r.total.toLocaleString('es-CO')}</td>`;
+                tablaHistorial.appendChild(tr);
+            });
+            document.getElementById('total-recaudado').innerText = `$ ${total.toLocaleString('es-CO')}`;
+            document.getElementById('total-recaudado-recarga').innerText = `$ ${totalR.toLocaleString('es-CO')}`;
+            window.datosExportables = filtro;
+        }
+
+        window.filtrarReporte = t => {
+            filtroReporteActual = t;
+            document.querySelectorAll('.report-filter').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderizarHistorial();
+        };
+
+        document.getElementById('btn-exportar-csv').addEventListener('click', () => {
+            if (!window.datosExportables || window.datosExportables.length === 0) return mostrarAlerta("No hay datos.", "error");
+            let csv = "data:text/csv;charset=utf-8,";
+            csv += "Fecha Salida,Placa,Tipo,Minutos,Minutos Cobrados,Convenio,Descuento,Metodo Pago,Total Parqueo,Total Recarga,Total General,Observacion\n";
+            window.datosExportables.forEach(r => {
+                const f = new Date(r.horaSalida);
+                const fecha = f.toLocaleDateString('es-CO') + ' ' + f.toLocaleTimeString('es-CO');
+                const tipo = (r.tipo || 'carro') + (r.esElectrico ? " (Eléctrico)" : "");
+                const obs = (r.comment || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                const conv = (r.convenio || '').replace(/,/g, ';');
+                csv += `${fecha},${r.placa},${tipo},${r.minutos},${r.minutosCobrados || r.minutos},"${conv}",${r.descuento || 0},${r.paymentMethod},${r.costoParqueo || 0},${r.costoRecarga || 0},${r.total},"${obs}"\n`;
+            });
+            const a = document.createElement("a"); a.setAttribute("href", encodeURI(csv)); a.setAttribute("download", `reporte_${filtroReporteActual}.csv`); document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        });
+
+        // ================= MOVIMIENTOS =================
+        document.getElementById('btn-add-movimiento').addEventListener('click', () => {
+            const monto = parseFloat(document.getElementById('mov-monto').value);
+            const desc = document.getElementById('mov-descripcion').value.trim();
+            if (!monto || monto <= 0 || !desc) return mostrarAlerta("Monto y descripción requeridos.", "error");
+            appState.cashMovements.push({ id: Date.now(), date: Date.now(), amount: monto, description: desc });
+            guardarDatos();
+            document.getElementById('mov-monto').value = '';
+            document.getElementById('mov-descripcion').value = '';
+            renderizarMovimientos();
+            mostrarAlerta("Movimiento registrado.", "success");
+        });
+
+        function renderizarMovimientos() {
+            tablaMovimientos.innerHTML = '';
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            const movs = appState.cashMovements.filter(m => m.date >= hoy.getTime()).sort((a,b) => b.date - a.date);
+            if (movs.length === 0) { tablaMovimientos.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Sin movimientos hoy.</td></tr>'; return; }
+            movs.forEach(m => {
+                const h = new Date(m.date).toLocaleTimeString('es-CO', {hour:'2-digit', minute:'2-digit'});
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${h}</td><td>${m.description}</td><td style="color:var(--danger); font-weight:bold;">-$${m.amount.toLocaleString('es-CO')}</td><td><button class="btn btn-danger btn-sm" onclick="eliminarMovimiento(${m.id})">×</button></td>`;
+                tablaMovimientos.appendChild(tr);
+            });
+        }
+
+        window.eliminarMovimiento = id => {
+            appState.cashMovements = appState.cashMovements.filter(m => m.id !== id);
+            guardarDatos(); renderizarMovimientos();
+        };
+
+        // ================= CAJA =================
+        function actualizarUICaja() {
+            const btn = document.getElementById('btn-action-caja');
+            const cerrada = document.getElementById('cierre-cerrada-info');
+            const abierta = document.getElementById('cierre-abierta-info');
+            if (!appState.cashState.opened) {
+                btn.innerText = '🔓 Apertura de Caja';
+                btn.className = 'btn btn-success btn-block';
+                btn.style.fontSize = '1.2rem'; btn.style.padding = '1rem'; btn.style.marginBottom = '1rem';
+                cerrada.classList.remove('hidden'); abierta.classList.add('hidden');
+            } else {
+                btn.innerText = '🔐 Cerrar Caja del Día';
+                btn.className = 'btn btn-danger btn-block';
+                btn.style.fontSize = '1.2rem'; btn.style.padding = '1rem'; btn.style.marginBottom = '1rem';
+                cerrada.classList.add('hidden'); abierta.classList.remove('hidden');
+                actualizarResumenCierre();
+            }
+        }
+
+        function actualizarResumenCierre() {
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            const inicioHoy = hoy.getTime();
+            const histHoy = appState.historial.filter(r => r.horaSalida >= inicioHoy);
+            const cashTotal = histHoy.filter(r => r.paymentMethod !== 'transferencia').reduce((s,r) => s + r.total, 0);
+            const transferTotal = histHoy.filter(r => r.paymentMethod === 'transferencia').reduce((s,r) => s + r.total, 0);
+            const recargaTotal = histHoy.reduce((s,r) => s + (r.costoRecarga || 0), 0);
+            const expensesTotal = appState.cashMovements.filter(m => m.date >= inicioHoy).reduce((s,m) => s + m.amount, 0);
+            const expectedCash = appState.cashState.openingCash + cashTotal - expensesTotal;
+            document.getElementById('cierre-apertura').innerText = `$ ${appState.cashState.openingCash.toLocaleString('es-CO')}`;
+            document.getElementById('cierre-efectivo').innerText = `$ ${cashTotal.toLocaleString('es-CO')}`;
+            document.getElementById('cierre-transferencia').innerText = `$ ${transferTotal.toLocaleString('es-CO')}`;
+            document.getElementById('cierre-gastos').innerText = `$ ${expensesTotal.toLocaleString('es-CO')}`;
+            document.getElementById('cierre-recarga').innerText = `$ ${recargaTotal.toLocaleString('es-CO')}`;
+            document.getElementById('cierre-efectivo-esperado').innerText = `$ ${expectedCash.toLocaleString('es-CO')}`;
+            return { cashTotal, transferTotal, recargaTotal, expensesTotal, expectedCash };
+        }
+
+        document.getElementById('btn-action-caja').addEventListener('click', () => {
+            if (!appState.cashState.opened) {
+                document.getElementById('input-apertura-monto').value = '';
+                document.getElementById('modal-apertura').classList.remove('hidden');
+            } else {
+                const r = actualizarResumenCierre();
+                document.getElementById('modal-cierre-esperado').innerText = `$ ${r.expectedCash.toLocaleString('es-CO')}`;
+                document.getElementById('input-conteo-cierre').value = '';
+                document.getElementById('modal-diferencia-box').style.display = 'none';
+                document.getElementById('modal-cierre').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('btn-confirmar-apertura').addEventListener('click', () => {
+            const monto = parseFloat(document.getElementById('input-apertura-monto').value);
+            if (isNaN(monto) || monto < 0) return mostrarAlerta("Ingresa un monto válido.", "error");
+            appState.cashState = { opened: true, openingTime: Date.now(), openingCash: monto, closed: false, closingTime: null, closingCounted: 0, closingDifference: 0 };
+            guardarDatos();
+            document.getElementById('modal-apertura').classList.add('hidden');
+            actualizarUICaja();
+            mostrarAlerta(`✅ Caja abierta con $${monto.toLocaleString('es-CO')}`, "success");
+        });
+
+        document.getElementById('input-conteo-cierre').addEventListener('input', () => {
+            const counted = parseFloat(document.getElementById('input-conteo-cierre').value);
+            const expected = actualizarResumenCierre().expectedCash;
+            const box = document.getElementById('modal-diferencia-box');
+            const val = document.getElementById('modal-diferencia-valor');
+            if (isNaN(counted)) { box.style.display = 'none'; return; }
+            const diff = counted - expected;
+            box.style.display = 'block';
+            if (diff === 0) { box.style.background = 'var(--success)'; box.style.color = 'white'; val.innerText = `$ 0 (CUADRADA ✓)`; }
+            else if (diff > 0) { box.style.background = 'var(--warning)'; box.style.color = '#000'; val.innerText = `+$${diff.toLocaleString('es-CO')} (A FAVOR)`; }
+            else { box.style.background = 'var(--danger)'; box.style.color = 'white'; val.innerText = `-$${Math.abs(diff).toLocaleString('es-CO')} (EN CONTRA)`; }
+        });
+
+        document.getElementById('btn-confirmar-cierre').addEventListener('click', () => {
+            const counted = parseFloat(document.getElementById('input-conteo-cierre').value);
+            if (isNaN(counted) || counted < 0) return mostrarAlerta("Ingresa el monto contado.", "error");
+            const r = actualizarResumenCierre();
+            const diff = counted - r.expectedCash;
+            appState.cashState.closed = true;
+            appState.cashState.closingTime = Date.now();
+            appState.cashState.closingCounted = counted;
+            appState.cashState.closingDifference = diff;
+            guardarDatos();
+            descargarArchivosCierre();
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            const inicioHoy = hoy.getTime();
+            appState.historial = appState.historial.filter(h => h.horaSalida < inicioHoy);
+            appState.vehiculos = [];
+            appState.cashMovements = appState.cashMovements.filter(m => m.date < inicioHoy);
+            appState.cashState = { opened: false, openingTime: null, openingCash: 0, closed: false, closingTime: null, closingCounted: 0, closingDifference: 0 };
+            guardarDatos();
+            renderizarTabla();
+            renderizarHistorial();
+            renderizarMovimientos();
+            actualizarUICaja();
+            const msg = diff === 0 ? `✅ Caja cuadrada perfectamente.\nCSVs descargados y lista limpiada.`
+                : diff > 0 ? `⚠️ A FAVOR: +$${diff.toLocaleString('es-CO')}\nCSVs descargados y lista limpiada.`
+                : `⚠️ EN CONTRA: -$${Math.abs(diff).toLocaleString('es-CO')}\nCSVs descargados y lista limpiada.`;
+            mostrarAlerta(msg, "success");
+            document.getElementById('modal-cierre').classList.add('hidden');
+        });
+
+        function descargarArchivo(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url; link.download = filename;
+            document.body.appendChild(link); link.click();
+            setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(link); }, 200);
+        }
+
+        function descargarArchivosCierre() {
+            const dateStr = new Date().toISOString().slice(0, 10);
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            const inicioHoy = hoy.getTime();
+            const histHoy = appState.historial.filter(r => r.horaSalida >= inicioHoy);
+            const movsHoy = appState.cashMovements.filter(m => m.date >= inicioHoy);
+            const cashTotal = histHoy.filter(r => r.paymentMethod !== 'transferencia').reduce((s,r) => s + r.total, 0);
+            const transferTotal = histHoy.filter(r => r.paymentMethod === 'transferencia').reduce((s,r) => s + r.total, 0);
+            const recargaTotal = histHoy.reduce((s,r) => s + (r.costoRecarga || 0), 0);
+            const expensesTotal = movsHoy.reduce((s,m) => s + m.amount, 0);
+            const expectedCash = appState.cashState.openingCash + cashTotal - expensesTotal;
+            const countedCash = appState.cashState.closingCounted;
+            const difference = countedCash - expectedCash;
+
+            let csv1 = '\uFEFF';
+            csv1 += 'Fecha Salida,Placa,Tipo,Minutos,Minutos Cobrados,Convenio,Descuento,Metodo Pago,Total Parqueo,Total Recarga,Total General,Observacion\n';
+            histHoy.forEach(r => {
+                const f = new Date(r.horaSalida);
+                const fecha = f.toLocaleDateString('es-CO') + ' ' + f.toLocaleTimeString('es-CO');
+                const tipo = (r.tipo || 'carro') + (r.esElectrico ? ' (Eléctrico)' : '');
+                const obs = (r.comment || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                const conv = (r.convenio || '').replace(/,/g, ';');
+                csv1 += `${fecha},${r.placa},${tipo},${r.minutos},${r.minutosCobrados || r.minutos},"${conv}",${r.descuento || 0},${r.paymentMethod},${r.costoParqueo || 0},${r.costoRecarga || 0},${r.total},"${obs}"\n`;
+            });
+
+            let csv2 = '\uFEFF';
+            csv2 += 'Hora,Descripcion,Monto\n';
+            movsHoy.forEach(m => {
+                const h = new Date(m.date).toLocaleTimeString('es-CO');
+                csv2 += `${h},"${m.description.replace(/"/g, '""')}",${m.amount}\n`;
+            });
+
+            let csv3 = '\uFEFF';
+            csv3 += 'Concepto,Valor\n';
+            csv3 += `Fecha Apertura,${new Date(appState.cashState.openingTime).toLocaleString('es-CO')}\n`;
+            csv3 += `Monto Apertura,${appState.cashState.openingCash}\n`;
+            csv3 += `Total Efectivo Cobrado,${cashTotal}\n`;
+            csv3 += `Total Transferencia,${transferTotal}\n`;
+            csv3 += `Total Recarga Electrica,${recargaTotal}\n`;
+            csv3 += `Total Gastos/Retiros,${expensesTotal}\n`;
+            csv3 += `Efectivo Esperado,${expectedCash}\n`;
+            csv3 += `Efectivo Contado,${countedCash}\n`;
+            csv3 += `Diferencia,${difference}\n`;
+            csv3 += `Estado,${difference === 0 ? 'CUADRADA' : (difference > 0 ? 'A FAVOR' : 'EN CONTRA')}\n`;
+            csv3 += `Fecha Cierre,${new Date().toLocaleString('es-CO')}\n`;
+
+            descargarArchivo(csv1, `cierre_${dateStr}_1_vehiculos.csv`);
+            setTimeout(() => descargarArchivo(csv2, `cierre_${dateStr}_2_movimientos.csv`), 700);
+            setTimeout(() => descargarArchivo(csv3, `cierre_${dateStr}_3_resumen.csv`), 1400);
+        }
+
+        // ================= CONVENIOS =================
+        function renderizarConveniosSettings() {
+            document.getElementById('set-habilitar-convenios').checked = appState.settings.habilitarConvenios;
+            const c = document.getElementById('convenios-container');
+            c.innerHTML = '';
+            if (appState.settings.convenios.length === 0) {
+                c.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1rem;">No hay convenios configurados.</p>';
+                return;
+            }
+            appState.settings.convenios.forEach((conv, index) => {
+                const div = document.createElement('div');
+                div.className = 'convenio-item';
+                div.innerHTML = `
+                    <div style="display: flex; gap: 0.6rem; margin-bottom: 0.6rem;">
+                        <div style="flex: 2;">
+                            <label>Nombre del establecimiento</label>
+                            <input type="text" class="conv-nombre" data-index="${index}" value="${(conv.nombre || '').replace(/"/g, '&quot;')}" placeholder="Ej: Dollarcity">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Horas</label>
+                            <input type="number" class="conv-horas" data-index="${index}" value="${conv.horas || 1}" min="1" max="24">
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm btn-block" onclick="eliminarConvenio(${index})">🗑️ Eliminar</button>
+                `;
+                c.appendChild(div);
+            });
+            document.querySelectorAll('.conv-nombre').forEach(inp => {
+                inp.addEventListener('input', e => { appState.settings.convenios[parseInt(e.target.dataset.index)].nombre = e.target.value; });
+            });
+            document.querySelectorAll('.conv-horas').forEach(inp => {
+                inp.addEventListener('input', e => { appState.settings.convenios[parseInt(e.target.dataset.index)].horas = Math.max(1, parseInt(e.target.value) || 1); });
+            });
+        }
+
+        document.getElementById('btn-add-convenio').addEventListener('click', () => {
+            appState.settings.convenios.push({ id: Date.now(), nombre: '', horas: 1 });
+            renderizarConveniosSettings();
+        });
+        window.eliminarConvenio = function(index) { appState.settings.convenios.splice(index, 1); renderizarConveniosSettings(); };
+        document.getElementById('set-habilitar-convenios').addEventListener('change', e => { appState.settings.habilitarConvenios = e.target.checked; });
+
+        // ================= SETTINGS ACTIONS =================
+        document.getElementById('btn-settings').addEventListener('click', () => {
+            viewDashboard.classList.add('hidden');
+            viewSettings.classList.remove('hidden');
+            actualizarTextosSettings();
+            renderizarMensualesSettings();
+            renderizarEmojisSettings();
+            renderizarConveniosSettings();
+            actualizarPreviewQR();
+            cambiarTab('config');
+        });
+
+        document.getElementById('btn-close-settings-top').addEventListener('click', () => {
+            viewSettings.classList.add('hidden');
+            viewDashboard.classList.remove('hidden');
+            verificarRecargaEnDashboard();
+        });
+        document.getElementById('btn-close-reports').addEventListener('click', () => {
+            viewSettings.classList.add('hidden');
+            viewDashboard.classList.remove('hidden');
+            verificarRecargaEnDashboard();
+        });
+
+        document.getElementById('set-habilitar-recarga').addEventListener('change', e => {
+            document.getElementById('grupo-precio-recarga').classList.toggle('hidden', !e.target.checked);
+        });
+
+        function renderizarEmojisSettings() {
+            const c = document.getElementById('emoji-picker');
+            c.innerHTML = '';
+            emojisDisponibles.forEach(obj => {
+                const span = document.createElement('span');
+                span.className = 'emoji-option' + (obj.flip ? ' flip' : '');
+                span.innerText = obj.char;
+                if (appState.settings.logoEmojis.includes(obj.char) && !appState.settings.logoBase64) span.classList.add('selected');
+                span.onclick = () => {
+                    const cur = appState.settings.logoEmojis;
+                    const idx = cur.indexOf(obj.char);
+                    if (idx !== -1) cur.splice(idx, 1);
+                    else { if (cur.length >= 6) return mostrarAlerta("Máximo 6 emojis.", "error"); cur.push(obj.char); }
+                    appState.settings.logoBase64 = null;
+                    document.getElementById('set-logo').value = '';
+                    renderizarEmojisSettings();
+                    actualizarTextosSettings();
+                };
+                c.appendChild(span);
+            });
+        }
+
+        document.querySelectorAll('.color-option').forEach(el => {
+            el.addEventListener('click', e => {
+                appState.settings.colorTheme = e.currentTarget.getAttribute('data-color');
+                aplicarColorTheme();
+            });
+        });
+
+        // Mobile First Toggle
+        document.getElementById('set-mobile-first').addEventListener('change', e => {
+            appState.settings.mobileFirst = e.target.checked;
+            aplicarModoMobile();
+            guardarDatos();
+            if (e.target.checked) {
+                mostrarAlerta("Modo Mobile activado.\nUsa la barra inferior para navegar.", "success");
+            }
+        });
+
+        function actualizarPreviewQR() {
+            const previewImg = document.getElementById('qr-preview-img');
+            const previewText = document.getElementById('qr-preview-text');
+            if (appState.settings.qrBase64) {
+                previewImg.src = appState.settings.qrBase64;
+                previewImg.classList.remove('hidden');
+            } else previewImg.classList.add('hidden');
+            previewText.innerText = appState.settings.qrDireccion || 'Sin dirección configurada';
+        }
+
+        document.getElementById('set-qr-imagen').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 500 * 1024) return mostrarAlerta("La imagen es muy grande (máx 500KB).", "error");
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    appState.settings.qrBase64 = ev.target.result;
+                    actualizarPreviewQR();
+                    mostrarAlerta("QR cargado. Recuerda guardar los cambios.", "success");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('set-qr-direccion').addEventListener('input', function(e) {
+            appState.settings.qrDireccion = e.target.value.trim();
+            actualizarPreviewQR();
+        });
+
+        document.getElementById('set-mostrar-qr-direccion').addEventListener('change', function(e) {
+            appState.settings.mostrarQrDireccion = e.target.checked;
+        });
+
+        document.getElementById('btn-eliminar-qr').addEventListener('click', () => {
+            if (!appState.settings.qrBase64 && !appState.settings.qrDireccion) return;
+            if (confirm('¿Eliminar el QR configurado?')) {
+                appState.settings.qrBase64 = null;
+                appState.settings.qrDireccion = '';
+                document.getElementById('set-qr-imagen').value = '';
+                document.getElementById('set-qr-direccion').value = '';
+                actualizarPreviewQR();
+                mostrarAlerta("QR eliminado.", "success");
+            }
+        });
+
+        function actualizarTextosSettings() {
+            document.getElementById('set-font-size').value = appState.settings.fontSize;
+            document.getElementById('set-nombre').value = appState.settings.nombre;
+            document.getElementById('set-nit').value = appState.settings.nit;
+            document.getElementById('set-pisos').value = appState.settings.pisos;
+            document.getElementById('set-puestos').value = appState.settings.puestosPorPiso;
+            document.getElementById('set-precio-carro-dia').value = appState.settings.tarifas.carro.dia;
+            document.getElementById('set-precio-carro-noche').value = appState.settings.tarifas.carro.noche;
+            document.getElementById('set-precio-moto-dia').value = appState.settings.tarifas.moto.dia;
+            document.getElementById('set-precio-moto-noche').value = appState.settings.tarifas.moto.noche;
+            document.getElementById('set-precio-bici-dia').value = appState.settings.tarifas.bicicleta.dia;
+            document.getElementById('set-precio-bici-noche').value = appState.settings.tarifas.bicicleta.noche;
+            document.getElementById('set-hora-noche').value = appState.settings.horaInicioNoche;
+            document.getElementById('set-precio-mensual').value = appState.settings.precioMensual;
+            document.getElementById('set-habilitar-recarga').checked = appState.settings.habilitarRecarga;
+            document.getElementById('set-precio-recarga').value = appState.settings.precioRecarga;
+            document.getElementById('grupo-precio-recarga').classList.toggle('hidden', !appState.settings.habilitarRecarga);
+            document.getElementById('set-ticket-disclaimer').value = appState.settings.ticketDisclaimer || '';
+            document.getElementById('set-mostrar-disclaimer').checked = appState.settings.mostrarDisclaimer;
+            document.getElementById('set-qr-direccion').value = appState.settings.qrDireccion || '';
+            document.getElementById('set-mostrar-qr-direccion').checked = appState.settings.mostrarQrDireccion;
+            document.getElementById('set-printer-width').value = appState.settings.printerWidth;
+            document.getElementById('set-habilitar-convenios').checked = appState.settings.habilitarConvenios;
+            document.getElementById('set-mobile-first').checked = appState.settings.mobileFirst;
+            document.getElementById('app-title').innerText = appState.settings.nombre;
+
+            const hl = document.getElementById('header-logo');
+            const he = document.getElementById('header-emojis');
+            if (appState.settings.logoBase64) {
+                hl.src = appState.settings.logoBase64; hl.classList.remove('hidden'); he.innerHTML = '';
+            } else {
+                hl.classList.add('hidden'); he.innerHTML = renderEmojisHTML(appState.settings.logoEmojis, '2rem');
+            }
+            syncMobileAppBar();
+        }
+
+        document.getElementById('set-logo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    appState.settings.logoBase64 = ev.target.result;
+                    document.querySelectorAll('.emoji-option').forEach(x => x.classList.remove('selected'));
+                    actualizarTextosSettings();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('btn-add-mensual').addEventListener('click', () => {
+            const placa = document.getElementById('input-add-mensual').value.trim().toUpperCase();
+            const dia = parseInt(document.getElementById('input-dia-corte').value);
+            if (!placa || isNaN(dia) || dia < 1 || dia > 31) return mostrarAlerta("Datos inválidos.", "error");
+            if (appState.settings.mensuales.some(m => m.placa === placa)) return mostrarAlerta("Placa ya existe.", "error");
+            appState.settings.mensuales.push({ placa, dentro: false, diaCorte: dia });
+            document.getElementById('input-add-mensual').value = '';
+            document.getElementById('input-dia-corte').value = '';
+            renderizarMensualesSettings();
+            renderizarTablaMensuales();
+        });
+
+        function renderizarMensualesSettings() {
+            const c = document.getElementById('lista-mensuales');
+            c.innerHTML = '';
+            appState.settings.mensuales.forEach((m, i) => {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${m.dentro ? '🟢' : '🔴'} ${m.placa} (Corte: ${m.diaCorte}) <span onclick="eliminarMensual(${i})">×</span>`;
+                c.appendChild(tag);
+            });
+        }
+
+        window.eliminarMensual = i => { appState.settings.mensuales.splice(i, 1); renderizarMensualesSettings(); renderizarTablaMensuales(); };
+
+        document.getElementById('btn-save-settings-top').addEventListener('click', () => {
+            appState.settings.fontSize = document.getElementById('set-font-size').value;
+            aplicarTamanoFuente();
+            appState.settings.nombre = document.getElementById('set-nombre').value;
+            appState.settings.nit = document.getElementById('set-nit').value;
+            appState.settings.pisos = parseInt(document.getElementById('set-pisos').value);
+            appState.settings.puestosPorPiso = parseInt(document.getElementById('set-puestos').value);
+            appState.settings.tarifas.carro.dia = parseInt(document.getElementById('set-precio-carro-dia').value);
+            appState.settings.tarifas.carro.noche = parseInt(document.getElementById('set-precio-carro-noche').value);
+            appState.settings.tarifas.moto.dia = parseInt(document.getElementById('set-precio-moto-dia').value);
+            appState.settings.tarifas.moto.noche = parseInt(document.getElementById('set-precio-moto-noche').value);
+            appState.settings.tarifas.bicicleta.dia = parseInt(document.getElementById('set-precio-bici-dia').value);
+            appState.settings.tarifas.bicicleta.noche = parseInt(document.getElementById('set-precio-bici-noche').value);
+            appState.settings.horaInicioNoche = document.getElementById('set-hora-noche').value;
+            appState.settings.precioMensual = parseInt(document.getElementById('set-precio-mensual').value);
+            appState.settings.habilitarRecarga = document.getElementById('set-habilitar-recarga').checked;
+            appState.settings.precioRecarga = parseInt(document.getElementById('set-precio-recarga').value);
+            appState.settings.ticketDisclaimer = document.getElementById('set-ticket-disclaimer').value;
+            appState.settings.mostrarDisclaimer = document.getElementById('set-mostrar-disclaimer').checked;
+            appState.settings.qrDireccion = document.getElementById('set-qr-direccion').value.trim();
+            appState.settings.mostrarQrDireccion = document.getElementById('set-mostrar-qr-direccion').checked;
+            appState.settings.printerWidth = document.getElementById('set-printer-width').value;
+            appState.settings.habilitarConvenios = document.getElementById('set-habilitar-convenios').checked;
+            aplicarAnchoImpresora();
+            guardarDatos();
+            actualizarTextosSettings();
+            mostrarAlerta("Ajustes guardados.", "success");
+            if (!appState.settings.mobileFirst) {
+                viewSettings.classList.add('hidden');
+                viewDashboard.classList.remove('hidden');
+            }
+            verificarRecargaEnDashboard();
+        });
+
+        init();
+    </script>
+</body>
+</html>
