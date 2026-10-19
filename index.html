@@ -50,7 +50,7 @@
         .card { background: var(--bg-card); border-radius: 8px; padding: 1.25rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.25rem; border: 1px solid var(--border); }
         .form-group { margin-bottom: 0.9rem; }
         label { display: block; margin-bottom: 0.3rem; font-weight: bold; font-size: 0.9rem; }
-        input[type="text"], input[type="number"], input[type="time"], input[type="file"], select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 5px; background: var(--bg-body); color: var(--text-main); font-size: 1rem; font-family: inherit; }
+        input[type="text"], input[type="number"], input[type="time"], input[type="file"], input[type="password"], select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 5px; background: var(--bg-body); color: var(--text-main); font-size: 1rem; font-family: inherit; }
         textarea { resize: vertical; min-height: 4rem; }
         .input-group { display: flex; gap: 0.6rem; }
         .checkbox-group { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; padding: 0.6rem; background: var(--bg-body); border-radius: 5px; border: 1px dashed var(--primary); }
@@ -126,219 +126,202 @@
         .qr-preview img { max-width: 120px; max-height: 120px; display: inline-block; }
         .convenio-item { background: var(--bg-body); padding: 0.9rem; border-radius: 5px; border: 1px solid var(--border); margin-bottom: 0.6rem; }
 
-        /* ================= MOBILE BAR (HIDDEN BY DEFAULT) ================= */
+        /* ================= LOGIN SCREEN ================= */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            padding: 1.25rem;
+            overflow-y: auto;
+        }
+        [data-theme="dark"] #login-screen {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .login-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            max-width: 24rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: loginFadeIn 0.4s ease-out;
+        }
+        @keyframes loginFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-logo {
+            display: flex;
+            justify-content: center;
+            gap: 0.15rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.6rem;
+            line-height: 1;
+        }
+        .login-logo span.flip { transform: scaleX(-1); display: inline-block; }
+        .login-card h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-main);
+        }
+        .login-card p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .login-form-group {
+            text-align: left;
+            margin-bottom: 0.9rem;
+        }
+        .login-form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--text-main);
+        }
+        .login-form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .login-form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .login-btn:hover { background: var(--primary-hover); }
+        .login-btn:active { transform: scale(0.98); }
+        .login-error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        .login-hint {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .login-hint strong { color: var(--primary); }
+        .login-hint code {
+            background: var(--bg-body);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--text-main);
+        }
+        .login-theme-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            padding: 0.5rem 0.7rem;
+            border-radius: 10px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ================= MOBILE BAR ================= */
         .mobile-app-bar { display: none; }
         .mobile-bottom-nav { display: none; }
         .mobile-first-toggle-card { background: var(--bg-body); padding: 1rem; border-radius: 8px; border: 2px solid var(--primary); margin-top: 1rem; }
 
         /* ================= MOBILE FIRST MODE ================= */
-        html.mobile-first {
-            overscroll-behavior: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-        html.mobile-first body {
-            padding: 0 !important;
-            margin: 0 !important;
-            overflow: hidden;
-            height: 100vh;
-            height: 100dvh;
-        }
-        html.mobile-first header {
-            display: none !important;
-        }
+        html.mobile-first { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        html.mobile-first body { padding: 0 !important; margin: 0 !important; overflow: hidden; height: 100vh; height: 100dvh; }
+        html.mobile-first header { display: none !important; }
         html.mobile-first .mobile-app-bar {
-            display: flex;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            background: var(--bg-card);
-            padding: 0.7rem 1rem;
+            display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: var(--bg-card); padding: 0.7rem 1rem;
             padding-top: calc(0.7rem + env(safe-area-inset-top));
-            border-bottom: 1px solid var(--border);
-            align-items: center;
-            gap: 0.6rem;
+            border-bottom: 1px solid var(--border); align-items: center; gap: 0.6rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .mobile-app-bar .mobile-emojis { display: flex; gap: 0.1rem; font-size: 1.3rem; }
         .mobile-app-bar .mobile-emojis span.flip { transform: scaleX(-1); }
-        .mobile-app-bar #mobile-app-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin: 0;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .mobile-app-bar .mobile-bar-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.3rem;
-            padding: 0.4rem;
-            cursor: pointer;
-            border-radius: 8px;
-            line-height: 1;
-            min-width: 2.5rem;
-            height: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .mobile-app-bar #mobile-app-name { font-size: 1.05rem; font-weight: 700; margin: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mobile-app-bar .mobile-bar-btn { background: none; border: none; color: var(--text-main); font-size: 1.3rem; padding: 0.4rem; cursor: pointer; border-radius: 8px; line-height: 1; min-width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; }
         .mobile-app-bar .mobile-bar-btn:active { background: var(--bg-body); }
-
         html.mobile-first .mobile-bottom-nav {
-            display: flex;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 100;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            padding-bottom: env(safe-area-inset-bottom);
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: var(--bg-card); border-top: 1px solid var(--border);
+            padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
         }
-        .mobile-nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0.55rem 0.2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 0.68rem;
-            font-weight: 600;
-            gap: 0.15rem;
-            transition: color 0.2s;
-            user-select: none;
-            -webkit-user-select: none;
-            min-height: 3.5rem;
-        }
+        .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.55rem 0.2rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.68rem; font-weight: 600; gap: 0.15rem; transition: color 0.2s; user-select: none; -webkit-user-select: none; min-height: 3.5rem; }
         .mobile-nav-item .nav-icon { font-size: 1.35rem; line-height: 1; }
         .mobile-nav-item.active { color: var(--primary); }
         .mobile-nav-item:active { background: var(--bg-body); }
-
         html.mobile-first .container {
-            max-width: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
+            max-width: none !important; margin: 0 !important; padding: 0 !important;
             padding-top: calc(3.5rem + env(safe-area-inset-top)) !important;
             padding-bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
-            height: 100vh;
-            height: 100dvh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+            height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
         }
-        html.mobile-first .card {
-            border-radius: 0 !important;
-            border: none !important;
-            border-bottom: 1px solid var(--border) !important;
-            box-shadow: none !important;
-            margin: 0 !important;
-            padding: 1rem !important;
-        }
-        html.mobile-first #view-settings {
-            background: var(--bg-body) !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            border-radius: 0 !important;
-        }
-        html.mobile-first .tabs-container {
-            display: none !important;
-        }
-        html.mobile-first #btn-close-settings,
-        html.mobile-first #btn-close-reports {
-            display: none !important;
-        }
-        html.mobile-first .subtabs {
-            position: sticky;
-            top: 0;
-            background: var(--bg-card);
-            z-index: 50;
-            margin: 0 !important;
-            padding: 0.5rem !important;
-            border-bottom: 1px solid var(--border) !important;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
+        html.mobile-first .card { border-radius: 0 !important; border: none !important; border-bottom: 1px solid var(--border) !important; box-shadow: none !important; margin: 0 !important; padding: 1rem !important; }
+        html.mobile-first #view-settings { background: var(--bg-body) !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; }
+        html.mobile-first .tabs-container { display: none !important; }
+        html.mobile-first #btn-close-settings, html.mobile-first #btn-close-reports { display: none !important; }
+        html.mobile-first .subtabs { position: sticky; top: 0; background: var(--bg-card); z-index: 50; margin: 0 !important; padding: 0.5rem !important; border-bottom: 1px solid var(--border) !important; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
         html.mobile-first .subtabs::-webkit-scrollbar { display: none; }
-        html.mobile-first .subtab-btn {
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        html.mobile-first .subtab-content {
-            padding: 1rem;
-        }
-        html.mobile-first .modal-overlay {
-            align-items: flex-end !important;
-            padding: 0 !important;
-        }
+        html.mobile-first .subtab-btn { white-space: nowrap; flex-shrink: 0; }
+        html.mobile-first .subtab-content { padding: 1rem; }
+        html.mobile-first .modal-overlay { align-items: flex-end !important; padding: 0 !important; }
         html.mobile-first .modal-content {
-            border-radius: 20px 20px 0 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            max-height: 92vh !important;
-            padding: 1rem !important;
-            padding-top: 0.5rem !important;
+            border-radius: 20px 20px 0 0 !important; width: 100% !important; max-width: 100% !important;
+            max-height: 92vh !important; padding: 1rem !important; padding-top: 0.5rem !important;
             padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        html.mobile-first .modal-content::before {
-            content: '';
-            display: block;
-            width: 36px;
-            height: 4px;
-            border-radius: 2px;
-            background: var(--border);
-            margin: 0.3rem auto 0.8rem;
-        }
-        html.mobile-first input,
-        html.mobile-first select,
-        html.mobile-first textarea {
-            font-size: 16px !important;
-            padding: 0.75rem !important;
-        }
-        html.mobile-first .btn {
-            padding: 0.75rem 1rem !important;
-            border-radius: 10px !important;
-            font-size: 1rem !important;
-        }
-        html.mobile-first .btn-sm {
-            padding: 0.4rem 0.7rem !important;
-            font-size: 0.85rem !important;
-        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        html.mobile-first .modal-content::before { content: ''; display: block; width: 36px; height: 4px; border-radius: 2px; background: var(--border); margin: 0.3rem auto 0.8rem; }
+        html.mobile-first input, html.mobile-first select, html.mobile-first textarea { font-size: 16px !important; padding: 0.75rem !important; }
+        html.mobile-first .btn { padding: 0.75rem 1rem !important; border-radius: 10px !important; font-size: 1rem !important; }
+        html.mobile-first .btn-sm { padding: 0.4rem 0.7rem !important; font-size: 0.85rem !important; }
         html.mobile-first table { font-size: 0.85rem; }
         html.mobile-first th, html.mobile-first td { padding: 0.5rem 0.4rem; }
-        html.mobile-first .ticket-wrapper {
-            padding: 10px;
-            background: #e0e0e0;
-            border-radius: 8px;
-        }
+        html.mobile-first .ticket-wrapper { padding: 10px; background: #e0e0e0; border-radius: 8px; }
         html.mobile-first .ticket { width: 100%; max-width: 100%; }
         html.mobile-first .search-box { width: 100%; margin-top: 0.3rem; }
         html.mobile-first .form-group { margin-bottom: 1rem; }
         html.mobile-first h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
         html.mobile-first h4 { font-size: 1rem; }
-        html.mobile-first .subtab-content > h3:first-child {
-            padding-top: 0.5rem;
-        }
-        html.mobile-first .mobile-hide-desktop { display: block !important; }
 
         @media (display-mode: standalone) {
-            html.mobile-first .container {
-                padding-top: calc(3.5rem + env(safe-area-inset-top)) !important;
-            }
+            html.mobile-first .container { padding-top: calc(3.5rem + env(safe-area-inset-top)) !important; }
         }
 
         /* ================= IMPRESIÓN TÉRMICA ================= */
@@ -347,7 +330,7 @@
             html, body { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; min-height: 0 !important; }
             .container, #modal-apertura, #modal-cierre, #custom-alert,
             #modal-ticket .modal-actions, #modal-ticket #exit-extras, #modal-ticket #tk-botones-accion,
-            #modal-ticket .no-print, .mobile-app-bar, .mobile-bottom-nav {
+            #modal-ticket .no-print, .mobile-app-bar, .mobile-bottom-nav, #login-screen {
                 display: none !important;
             }
             #modal-ticket {
@@ -362,9 +345,7 @@
                 padding: 0 !important; margin: 0 auto !important; max-height: none !important;
                 max-width: none !important; width: 100% !important; overflow: visible !important;
                 display: block !important; border-radius: 0 !important;
-                animation: none !important;
-                padding-bottom: 0 !important;
-                padding-top: 0 !important;
+                animation: none !important; padding-bottom: 0 !important; padding-top: 0 !important;
             }
             #modal-ticket .modal-content::before { display: none !important; }
             #modal-ticket .ticket-wrapper {
@@ -373,8 +354,7 @@
             }
             #modal-ticket .ticket {
                 margin: 0 auto !important; box-shadow: none !important; border: none !important;
-                background: white !important; color: black !important;
-                page-break-inside: avoid !important;
+                background: white !important; color: black !important; page-break-inside: avoid !important;
             }
             body.printer-58mm #modal-ticket .ticket { width: 54mm; max-width: 54mm; font-size: 9px; line-height: 1.2; padding: 1mm; }
             body.printer-80mm #modal-ticket .ticket { width: 76mm; max-width: 76mm; font-size: 11px; line-height: 1.3; padding: 2mm; }
@@ -400,31 +380,56 @@
 </head>
 <body>
 
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
+        <button class="login-theme-btn" id="login-theme-btn" type="button">🌙</button>
+        <div class="login-card">
+            <div class="login-logo" id="login-logo">🅿️</div>
+            <h1>Mi Parqueadero</h1>
+            <p class="subtitle">Ingresa tus credenciales para continuar</p>
+            <form id="login-form" autocomplete="off">
+                <div class="login-form-group">
+                    <label for="login-user">Usuario</label>
+                    <input type="text" id="login-user" placeholder="demo1" autocomplete="username" required>
+                </div>
+                <div class="login-form-group">
+                    <label for="login-pass">Contraseña</label>
+                    <input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="login-btn">Ingresar</button>
+                <div class="login-error hidden" id="login-error">Usuario o contraseña incorrectos</div>
+            </form>
+            <div class="login-hint">
+                <strong>Cuentas de demostración:</strong><br>
+                <code>demo1</code> / <code>clave1</code><br>
+                <code>demo2</code> / <code>clave2</code><br>
+                <code>demo3</code> / <code>clave3</code>
+            </div>
+        </div>
+    </div>
+
     <!-- MOBILE APP BAR -->
     <div class="mobile-app-bar">
         <div id="mobile-app-emojis" class="mobile-emojis"></div>
         <h2 id="mobile-app-name">Mi Parqueadero</h2>
         <button class="mobile-bar-btn hidden" id="mobile-save-btn">💾</button>
         <button class="mobile-bar-btn" id="mobile-theme-btn">🌙</button>
+        <button class="mobile-bar-btn" id="mobile-logout-btn" title="Cerrar sesión">🚪</button>
     </div>
 
     <!-- MOBILE BOTTOM NAV -->
     <nav class="mobile-bottom-nav">
         <button class="mobile-nav-item active" data-section="inicio">
-            <span class="nav-icon">🏠</span>
-            <span>Inicio</span>
+            <span class="nav-icon">🏠</span><span>Inicio</span>
         </button>
         <button class="mobile-nav-item" data-section="caja">
-            <span class="nav-icon">💰</span>
-            <span>Caja</span>
+            <span class="nav-icon">💰</span><span>Caja</span>
         </button>
         <button class="mobile-nav-item" data-section="ajustes">
-            <span class="nav-icon">⚙️</span>
-            <span>Ajustes</span>
+            <span class="nav-icon">⚙️</span><span>Ajustes</span>
         </button>
         <button class="mobile-nav-item" data-section="tema">
-            <span class="nav-icon">🎨</span>
-            <span>Tema</span>
+            <span class="nav-icon">🎨</span><span>Tema</span>
         </button>
     </nav>
 
@@ -438,6 +443,7 @@
             <div class="header-buttons">
                 <button id="theme-toggle">🌙 Oscuro</button>
                 <button id="btn-settings">⚙️ Ajustes y Reportes</button>
+                <button id="logout-btn" title="Cerrar sesión">🚪</button>
             </div>
         </header>
 
@@ -722,7 +728,6 @@
 
             <div id="content-appearance" class="hidden">
                 <h3>Apariencia de la Interfaz</h3>
-
                 <div class="mobile-first-toggle-card">
                     <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem;">
                         <span style="font-size: 2rem;">📱</span>
@@ -735,9 +740,7 @@
                         <input type="checkbox" id="set-mobile-first">
                         <label for="set-mobile-first" style="margin: 0; cursor: pointer;">Activar modo Mobile First</label>
                     </div>
-                    <small style="color: var(--text-muted); display: block; margin-top: 0.6rem; line-height: 1.4;">Activa barras de navegación inferiores, modales tipo "sheet" y diseño optimizado para pantallas táctiles. Para ocultar la barra del navegador, añade la app a tu pantalla de inicio.</small>
                 </div>
-
                 <div style="background: var(--bg-body); padding: 1.25rem; border-radius: 5px; border: 1px solid var(--border); margin-top: 1rem;">
                     <h4 style="margin-bottom: 1.5rem;">Paleta de Colores</h4>
                     <div class="color-picker" id="color-picker">
@@ -868,6 +871,14 @@
     </div>
 
     <script>
+        // ================= USUARIOS DEMO =================
+        const DEMO_USERS = {
+            'demo1': { password: 'clave1', label: 'Demo 1' },
+            'demo2': { password: 'clave2', label: 'Demo 2' },
+            'demo3': { password: 'clave3', label: 'Demo 3' }
+        };
+        const SESSION_KEY = 'park_session';
+
         let appState = {
             settings: {
                 nombre: "Parqueadero Camacho S.A.S", nit: "1074682943",
@@ -919,13 +930,49 @@
         const exitExtras = document.getElementById('exit-extras');
         const exitComment = document.getElementById('exit-comment');
 
+        // ================= LOGIN =================
+        function verificarSesion() {
+            const sesion = localStorage.getItem(SESSION_KEY);
+            if (sesion) {
+                const data = JSON.parse(sesion);
+                if (DEMO_USERS[data.user]) {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    return true;
+                }
+            }
+            document.getElementById('login-screen').classList.remove('hidden');
+            return false;
+        }
+
+        function hacerLogin(user, pass) {
+            const u = DEMO_USERS[user];
+            if (!u || u.password !== pass) return false;
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ user: user, loginTime: Date.now() }));
+            return true;
+        }
+
+        function cerrarSesion() {
+            if (!confirm('¿Estás seguro que deseas cerrar sesión?')) return;
+            localStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        // ================= INICIALIZACIÓN =================
         function init() {
             cargarDatos();
-            verificarNuevoDiaCaja();
             aplicarTema();
             aplicarTamanoFuente();
             aplicarColorTheme();
             aplicarAnchoImpresora();
+
+            // Verificar si ya hay sesión, si no mostrar login
+            const haySesion = verificarSesion();
+            if (!haySesion) {
+                // Solo cargar tema en el login
+                return;
+            }
+
+            verificarNuevoDiaCaja();
             aplicarModoMobile();
             renderizarEmojisSettings();
             renderizarTabla();
@@ -943,6 +990,39 @@
             configurarMobileNav();
         }
 
+        // Eventos del Login
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value;
+            const errorBox = document.getElementById('login-error');
+
+            if (hacerLogin(user, pass)) {
+                errorBox.classList.add('hidden');
+                document.getElementById('login-screen').classList.add('hidden');
+                // Reiniciar la app con la sesión activa
+                init();
+            } else {
+                errorBox.classList.remove('hidden');
+                document.getElementById('login-pass').value = '';
+                document.getElementById('login-pass').focus();
+            }
+        });
+
+        // Theme toggle del login
+        document.getElementById('login-theme-btn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            const nw = cur === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', nw);
+            localStorage.setItem('park_theme', nw);
+            document.getElementById('login-theme-btn').innerText = nw === 'light' ? '🌙' : '☀️';
+        });
+
+        // Botones de logout
+        document.getElementById('logout-btn').addEventListener('click', cerrarSesion);
+        document.getElementById('mobile-logout-btn').addEventListener('click', cerrarSesion);
+
+        // ================= RESTO DE LA LÓGICA (IGUAL QUE ANTES) =================
         function cargarDatos() {
             const s = localStorage.getItem('park_settings');
             const v = localStorage.getItem('park_vehiculos');
@@ -987,7 +1067,6 @@
             document.getElementById('custom-alert').classList.remove('hidden');
         }
 
-        // ================= TEMA =================
         themeToggleBtn.addEventListener('click', () => {
             const cur = document.documentElement.getAttribute('data-theme');
             const nw = cur === 'light' ? 'dark' : 'light';
@@ -1003,6 +1082,8 @@
             if (meta) meta.setAttribute('content', t === 'dark' ? '#121212' : '#007bff');
             const mbtn = document.getElementById('mobile-theme-btn');
             if (mbtn) mbtn.innerText = t === 'light' ? '🌙' : '☀️';
+            const lbtn = document.getElementById('login-theme-btn');
+            if (lbtn) lbtn.innerText = t === 'light' ? '🌙' : '☀️';
         }
         function aplicarTamanoFuente() { document.documentElement.setAttribute('data-font-size', appState.settings.fontSize); }
         function aplicarColorTheme() {
@@ -1014,7 +1095,6 @@
             document.body.classList.add('printer-' + appState.settings.printerWidth + 'mm');
         }
 
-        // ================= MOBILE FIRST =================
         function aplicarModoMobile() {
             if (appState.settings.mobileFirst) {
                 document.documentElement.classList.add('mobile-first');
@@ -1050,7 +1130,6 @@
         function cambiarSeccionMobile(seccion) {
             viewDashboard.classList.add('hidden');
             viewSettings.classList.add('hidden');
-
             if (seccion === 'inicio') {
                 viewDashboard.classList.remove('hidden');
             } else {
@@ -1059,17 +1138,13 @@
                 else if (seccion === 'ajustes') cambiarTab('config');
                 else if (seccion === 'tema') cambiarTab('appearance');
             }
-
             document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.toggle('active', el.dataset.section === seccion));
-
             const saveBtn = document.getElementById('mobile-save-btn');
             if (seccion === 'ajustes' || seccion === 'tema') saveBtn.classList.remove('hidden');
             else saveBtn.classList.add('hidden');
-
             document.querySelector('.container').scrollTop = 0;
         }
 
-        // ================= TABS =================
         function cambiarTab(tab) {
             ['tab-settings-btn', 'tab-reports-btn', 'tab-appearance-btn'].forEach(id => document.getElementById(id).classList.remove('active'));
             ['content-config', 'content-reports', 'content-appearance'].forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -1105,7 +1180,6 @@
             else { grupoRecarga.classList.add('hidden'); chkElectrico.checked = false; }
         }
 
-        // ================= LOGICA PRINCIPAL =================
         document.getElementById('btn-procesar-placa').addEventListener('click', procesarPlaca);
         inputPlaca.addEventListener('keypress', e => { if (e.key === 'Enter') procesarPlaca(); });
 
@@ -1348,7 +1422,6 @@
             });
         }
 
-        // ================= RENDERIZADO =================
         inputBuscarTabla.addEventListener('input', e => renderizarTabla(e.target.value.toUpperCase()));
 
         function renderizarTabla(filtro = '') {
@@ -1450,7 +1523,6 @@
             const a = document.createElement("a"); a.setAttribute("href", encodeURI(csv)); a.setAttribute("download", `reporte_${filtroReporteActual}.csv`); document.body.appendChild(a); a.click(); document.body.removeChild(a);
         });
 
-        // ================= MOVIMIENTOS =================
         document.getElementById('btn-add-movimiento').addEventListener('click', () => {
             const monto = parseFloat(document.getElementById('mov-monto').value);
             const desc = document.getElementById('mov-descripcion').value.trim();
@@ -1481,7 +1553,6 @@
             guardarDatos(); renderizarMovimientos();
         };
 
-        // ================= CAJA =================
         function actualizarUICaja() {
             const btn = document.getElementById('btn-action-caja');
             const cerrada = document.getElementById('cierre-cerrada-info');
@@ -1643,7 +1714,6 @@
             setTimeout(() => descargarArchivo(csv3, `cierre_${dateStr}_3_resumen.csv`), 1400);
         }
 
-        // ================= CONVENIOS =================
         function renderizarConveniosSettings() {
             document.getElementById('set-habilitar-convenios').checked = appState.settings.habilitarConvenios;
             const c = document.getElementById('convenios-container');
@@ -1685,7 +1755,6 @@
         window.eliminarConvenio = function(index) { appState.settings.convenios.splice(index, 1); renderizarConveniosSettings(); };
         document.getElementById('set-habilitar-convenios').addEventListener('change', e => { appState.settings.habilitarConvenios = e.target.checked; });
 
-        // ================= SETTINGS ACTIONS =================
         document.getElementById('btn-settings').addEventListener('click', () => {
             viewDashboard.classList.add('hidden');
             viewSettings.classList.remove('hidden');
@@ -1741,14 +1810,11 @@
             });
         });
 
-        // Mobile First Toggle
         document.getElementById('set-mobile-first').addEventListener('change', e => {
             appState.settings.mobileFirst = e.target.checked;
             aplicarModoMobile();
             guardarDatos();
-            if (e.target.checked) {
-                mostrarAlerta("Modo Mobile activado.\nUsa la barra inferior para navegar.", "success");
-            }
+            if (e.target.checked) mostrarAlerta("Modo Mobile activado.\nUsa la barra inferior para navegar.", "success");
         });
 
         function actualizarPreviewQR() {
@@ -1904,6 +1970,7 @@
             verificarRecargaEnDashboard();
         });
 
+        // Arrancar la app
         init();
     </script>
 </body>
